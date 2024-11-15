@@ -5,7 +5,7 @@ export async function POST(request: Request) {
 
   try {
     const { email, password } = await request.json();
-    const body = { userId: email, userPw: password };
+    const body = { userId: 1, userEmail: email, userPassword: password };
 
     const response = await fetch(BASE_URL, {
       method: "POST",
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
-      const errorData = await response.text();
+      const errorData = await response.json();
       return NextResponse.json(
         { error: errorData },
         { status: response.status }

@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 
+import { ErrorMessage, LoginFormType } from "@/lib/types";
+
 // Shadcn-UI 컴포넌트 불러오기
 import { Button } from "@/components/ui/button";
 import {
@@ -16,20 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 /**
- * 타입 선언
- * LoginForm,
- * ErrorMessage
- */
-type LoginForm = {
-  email: string;
-  password: string;
-};
-type ErrorMessage = {
-  email: string;
-  password: string;
-};
-
-/**
  * 로그인 페이지
  * · 사용자 로그인
  * · 로그인시, 유효성 검사 실행
@@ -37,13 +25,13 @@ type ErrorMessage = {
  * · 비밀번호 찾기 페이지로 이동
  */
 export default function LoginPage() {
-  const [formData, setFormData] = useState<LoginForm>({
+  const [formData, setFormData] = useState<LoginFormType>({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState<ErrorMessage>({
-    email: "",
-    password: "",
+    emailError: "",
+    passwordError: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,12 +46,14 @@ export default function LoginPage() {
     if (id === "email") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        email: value.includes("@") ? "" : "유효한 이메일 주소를 입력하세요.",
+        emailError: value.includes("@")
+          ? ""
+          : "유효한 이메일 주소를 입력하세요.",
       }));
     } else if (id === "password") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        password:
+        passwordError:
           value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
       }));
     }
@@ -112,7 +102,7 @@ export default function LoginPage() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <span className="text-red-500 text-sm min-h-[1.5em]">
-                  {errors.email || " "}
+                  {errors.emailError || " "}
                 </span>
                 <Label className="hidden" htmlFor="email">
                   이메일
@@ -126,7 +116,7 @@ export default function LoginPage() {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <span className="text-red-500 text-sm min-h-[1.5em]">
-                  {errors.password || " "}
+                  {errors.passwordError || " "}
                 </span>
                 <Label className="hidden" htmlFor="password">
                   비밀번호
