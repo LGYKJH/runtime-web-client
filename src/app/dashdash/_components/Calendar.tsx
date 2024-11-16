@@ -40,7 +40,9 @@ const Calendar = ({ onSelectDate }: CalendarProps) => {
       day
     );
     setSelectedDate(selectedDate);
-    onSelectDate && onSelectDate(selectedDate);
+    if (onSelectDate) {
+      onSelectDate(selectedDate);
+    }
   };
 
   const renderCalendarDays = () => {

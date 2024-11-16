@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Pretendard } from "@/lib/fonts";
+import { Pretendard, SpoqaHanSans } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${Pretendard.className} antialiased`}>{children}</body>
+      <body className={`${SpoqaHanSans.className} antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

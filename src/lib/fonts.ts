@@ -1,12 +1,42 @@
 import localFont from "next/font/local";
 
-// const nanumSquare = localFont({
-//   src: "../app/fonts/NanumSquareNeo-Variable.woff2",
-// });
-
 const Pretendard = localFont({
   src: "../app/fonts/PretendardVariable.woff2",
 });
+
+const SpoqaHanSans = localFont({
+  src: [
+    {
+      path: "../app/fonts/SpoqaHanSansNeo-Thin.woff2",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../app/fonts/SpoqaHanSansNeo-Light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../app/fonts/SpoqaHanSansNeo-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../app/fonts/SpoqaHanSansNeo-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../app/fonts/SpoqaHanSansNeo-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+});
+
+// const nanumSquare = localFont({
+//   src: "../app/fonts/NanumSquareNeo-Variable.woff2",
+// });
 
 // const Freesentation = localFont({
 //   src: "../app/fonts/FreesentationVF.woff2",
@@ -87,4 +117,4 @@ const Pretendard = localFont({
 //   ],
 // });
 
-export { Pretendard };
+export { Pretendard, SpoqaHanSans };
