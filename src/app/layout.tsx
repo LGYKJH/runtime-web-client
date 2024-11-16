@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import type { Metadata } from "next";
+
 import { Pretendard, SpoqaHanSans } from "@/lib/fonts";
+import DarkModeHandler from "./_components/DarkModeHandler";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${SpoqaHanSans.className} antialiased`}>
+        <DarkModeHandler />
         {children}
       </body>
     </html>

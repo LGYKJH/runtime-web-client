@@ -6,6 +6,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import UserAuthForm from "./_components/UserAuthForm";
 import AuthFormHeader from "./_components/AuthFormHeader";
+import DarkModeToggle from "@/app/_components/DarkModeToggle";
 
 export default function LoginPage() {
   const mountRef = useRef<HTMLDivElement | null>(null);
@@ -132,6 +133,9 @@ export default function LoginPage() {
             <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
           </svg>
           <span className="text-lg font-medium">RUNTIME</span>
+        </div>
+        <div className="absolute top-6 right-6 z-20">
+          <DarkModeToggle />
         </div>
         {/* 명언 */}
         <div className="absolute bottom-10 left-10 z-20 text-white">
