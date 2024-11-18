@@ -33,8 +33,6 @@ const Header = () => {
       const responseData = await response.json();
       console.log("로그아웃 성공:", responseData.message);
       alert("로그아웃 성공!");
-
-      window.location.href = "/login";
     } catch (error) {
       console.log("로그아웃 중 오류 발생:", error);
       alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
