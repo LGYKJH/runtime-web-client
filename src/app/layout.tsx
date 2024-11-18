@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import Script from "next/script"; // Script를 import
 
 import { Pretendard, SpoqaHanSans } from "@/lib/fonts";
 import DarkModeHandler from "./_components/DarkModeHandler";
@@ -16,6 +17,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <Script
+          src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}`}
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className={`${SpoqaHanSans.className} antialiased`}>
         <DarkModeHandler />
         {children}
