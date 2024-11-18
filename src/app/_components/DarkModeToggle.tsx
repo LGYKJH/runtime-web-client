@@ -1,17 +1,23 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useThemeStore } from "../_stores/themeStore";
+
+import SunIcon from "/public/icons/icon-sun.svg";
+import SunIconDark from "/public/icons/icon-sun-dark.svg";
 
 export default function DarkModeToggle() {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const toggleDarkMode = useThemeStore((state) => state.toggleDarkMode);
 
   return (
-    <button
+    <Button
       onClick={toggleDarkMode}
-      className="p-1 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+      variant="ghost"
+      size="icon"
+      className="w-7 h-7 px-0 py-0 gap-0"
     >
-      {isDarkMode ? "🌙" : "☀️"}
-    </button>
+      {isDarkMode ? <SunIconDark width={20} height={20} /> : <SunIcon width={20} height={20} />}
+    </Button>
   );
 }

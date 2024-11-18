@@ -1,17 +1,22 @@
+"use client";
+
 import React from "react";
+import { useThemeStore } from "@/app/_stores/themeStore";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-import SidebarTirggerIcon from "/public/icons/icon-sidebar-trigger.svg";
-import StarIcon from "/public/icons/icon-star.svg";
+import LogoutIcon from "/public/icons/icon-unlock.svg";
+import LogoutIconDark from "/public/icons/icon-unlock-dark.svg";
 import { Button } from "@/components/ui/button";
+import DarkModeToggle from "@/app/_components/DarkModeToggle";
 
 const Header = () => {
-  // 로그아웃 요청 함수
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
+
   const handleLogout = async () => {
     try {
       const response = await fetch("/api/user/logout", {
-        method: "GET", // 로그아웃 요청
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
@@ -28,8 +33,7 @@ const Header = () => {
       console.log("로그아웃 성공:", responseData.message);
       alert("로그아웃 성공!");
 
-      // 필요 시 리다이렉트 처리
-      window.location.href = "/login"; // 로그아웃 후 로그인 페이지로 이동
+      window.location.href = "/login";
     } catch (error) {
       console.error("로그아웃 중 오류 발생:", error);
       alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
@@ -38,17 +42,28 @@ const Header = () => {
 
   return (
     <section className="w-full flex flex-row justify-between items-center px-7 py-5">
-      <div className="w-full h-full flex flex-row justify-center items-center gap-x-2">
+      <div className="flex flex-row justify-center items-center gap-x-2">
         <SidebarTrigger />
+        <div className="h-7 flex flex-row justify-center items-center text-center px-2 pt-0.5 gap-4 tracking-tight">
+          <h2 className="text-secondary">크루</h2>
+          <span className="text-secondary">&#124;</span>
+          <h3 className="text-primary">러닝</h3>
+        </div>
+      </div>
+      <div className="h-full flex flex-row justify-center items-center gap-x-10">
+        <DarkModeToggle />
         <Button
-          variant="ghost"
-          size="icon"
-          className="w-7 h-7 px-0 py-0 gap-0"
-          onClick={handleLogout} // 로그아웃 핸들러 연결
+          variant="link"
+          className="flex flex-row justify-center items-center h-7 px-0 py-0 gap-2 no-underline hover:no-underline [&_svg]:size-4"
+          onClick={handleLogout}
         >
-          <StarIcon width={20} height={20} />
+          {isDarkMode ? (
+            <LogoutIconDark width={16} height={16} />
+          ) : (
+            <LogoutIcon width={16} height={16} />
+          )}
+          <h3>LOGOUT</h3>
         </Button>
-        <h2>RUNTIME</h2>/<h3>대시보드</h3>
       </div>
     </section>
   );

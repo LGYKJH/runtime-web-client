@@ -23,7 +23,9 @@ const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 // 사이드바 커스텀 코드
 // --------------------------------------------------------
+import { useThemeStore } from "@/app/_stores/themeStore";
 import SidebarTriggerIcon from "/public/icons/icon-sidebar-trigger.svg";
+import SidebarTriggerIconDark from "/public/icons/icon-sidebar-trigger-dark.svg";
 // --------------------------------------------------------
 
 type SidebarContext = {
@@ -259,6 +261,7 @@ const SidebarTrigger = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = useSidebar();
+  const isDarkMode = useThemeStore((state) => state.isDarkMode);
 
   return (
     <Button
@@ -273,7 +276,11 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <SidebarTriggerIcon width={20} height={20} />
+      {isDarkMode ? (
+        <SidebarTriggerIconDark width={20} height={20} />
+      ) : (
+        <SidebarTriggerIcon width={20} height={20} />
+      )}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
