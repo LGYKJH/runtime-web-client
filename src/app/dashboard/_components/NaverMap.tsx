@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+
 // 지역 좌표 타입
 const districtCoordinates = {
   종로구: { lat: 37.5729503, lng: 126.9793579 },
@@ -27,7 +28,7 @@ type NaverMapProps = {
 };
 
 const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
-  const mapRef = useRef<null | any>(null);
+  const mapRef = useRef<naver.maps.Map | null>(null);
 
   useEffect(() => {
     const initializeMap = () => {
@@ -44,7 +45,7 @@ const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
       };
 
       const map = new window.naver.maps.Map("map", mapOptions);
-      mapRef.current = map;
+      mapRef.current = map as naver.maps.Map;
 
       // 마커 추가
       Object.entries(districtCoordinates).forEach(([district, coord]) => {
@@ -72,7 +73,7 @@ const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
   const moveToDistrict = (district: Districts) => {
     if (mapRef.current && districtCoordinates[district]) {
       const { lat, lng } = districtCoordinates[district];
-      mapRef.current.setCenter(new window.naver.maps.LatLng(lat, lng));
+      mapRef.current.setCenter(new window.naver.maps.LatLng(lat, lng) as naver.maps.LatLng);
       mapRef.current.setZoom(14); // 줌 레벨 변경
     }
   };
