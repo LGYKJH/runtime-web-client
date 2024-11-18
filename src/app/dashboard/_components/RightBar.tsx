@@ -5,6 +5,21 @@ import { Label } from "@/components/ui/label";
 import React, { useRef } from "react";
 import NaverMap from "./NaverMap";
 
+// 지역 이름 타입
+type Districts =
+  | "종로구"
+  | "중구"
+  | "강남구"
+  | "서초구"
+  | "송파구"
+  | "마포구"
+  | "영등포구"
+  | "강서구"
+  | "관악구"
+  | "노원구"
+  | "성북구"
+  | "은평구";
+
 const RightBar = () => {
   const days = ["월", "화", "수", "목", "금", "토", "일"];
   const sports = [
@@ -19,7 +34,7 @@ const RightBar = () => {
     "캠핑",
   ];
   const crewSizes = ["1 ~ 4명", "5 ~ 8명", "9 ~ 12명", "13 ~ 16명", "17 ~ 20명", "20명 이상"];
-  const districts = [
+  const districts: Districts[] = [
     "종로구",
     "중구",
     "강남구",
@@ -34,9 +49,10 @@ const RightBar = () => {
     "은평구",
   ];
 
-  const districtHandlerRef = useRef(null);
+  // MutableRefObject로 타입 지정
+  const districtHandlerRef = useRef<((district: Districts) => void) | null>(null);
 
-  const handleDistrictClick = (district) => {
+  const handleDistrictClick = (district: Districts) => {
     if (districtHandlerRef.current) {
       districtHandlerRef.current(district);
     }
@@ -87,14 +103,18 @@ const RightBar = () => {
         </div>
 
         <Label className="font-normal py-1.5 text-secondary">장소</Label>
-        <NaverMap onDistrictClick={(handler) => (districtHandlerRef.current = handler)} />
+        <NaverMap
+          onDistrictClick={(handler: (district: Districts) => void) =>
+            (districtHandlerRef.current = handler)
+          }
+        />
         <div className="pt-2 pb-2 flex flex-row flex-wrap justify-start items-center gap-x-2 gap-y-2">
           {districts.map((district) => (
             <Button
               key={district}
               variant="ghost"
               size="sm"
-              className="px-2.5 h-7 font-normal  hover:bg-[#193fff] focus:bg-[#193fff] hover:text-white focus:text-white leading-normal rounded-full"
+              className="px-2.5 h-7 font-normal hover:bg-[#193fff] focus:bg-[#193fff] hover:text-white focus:text-white leading-normal rounded-full"
               onClick={() => handleDistrictClick(district)}
             >
               {district}
@@ -102,8 +122,6 @@ const RightBar = () => {
           ))}
         </div>
       </div>
-      <div></div>
-      <div></div>
     </section>
   );
 };

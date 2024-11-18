@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+// 지역 좌표 타입
 const districtCoordinates = {
   종로구: { lat: 37.5729503, lng: 126.9793579 },
   중구: { lat: 37.5637686, lng: 126.9979656 },
@@ -17,12 +18,20 @@ const districtCoordinates = {
   은평구: { lat: 37.6185557, lng: 126.9273747 },
 };
 
-const NaverMap = ({ onDistrictClick }) => {
-  const mapRef = useRef(null);
+// 지역 이름 타입
+type Districts = keyof typeof districtCoordinates;
+
+// NaverMapProps 타입 정의
+type NaverMapProps = {
+  onDistrictClick: (handler: (district: Districts) => void) => void;
+};
+
+const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
+  const mapRef = useRef<null | any>(null);
 
   useEffect(() => {
     const initializeMap = () => {
-      if (!window.naver) return;
+      if (!window.naver || !window.naver.maps) return;
 
       const mapOptions = {
         center: new window.naver.maps.LatLng(37.5665, 126.978), // 서울 중심 좌표
@@ -55,7 +64,7 @@ const NaverMap = ({ onDistrictClick }) => {
     }
   }, []);
 
-  const moveToDistrict = (district) => {
+  const moveToDistrict = (district: Districts) => {
     if (mapRef.current && districtCoordinates[district]) {
       const { lat, lng } = districtCoordinates[district];
       mapRef.current.setCenter(new window.naver.maps.LatLng(lat, lng));
