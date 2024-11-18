@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import React from "react";
+import React, { useRef } from "react";
 import NaverMap from "./NaverMap";
 
 const RightBar = () => {
@@ -18,7 +18,7 @@ const RightBar = () => {
     "글램핑",
     "캠핑",
   ];
-  const crewSizes = ["1~4명", "5~8명", "9~12명", "13~20명", "20명 이상"];
+  const crewSizes = ["1 ~ 4명", "5 ~ 8명", "9 ~ 12명", "13 ~ 16명", "17 ~ 20명", "20명 이상"];
   const districts = [
     "종로구",
     "중구",
@@ -33,6 +33,14 @@ const RightBar = () => {
     "성북구",
     "은평구",
   ];
+
+  const districtHandlerRef = useRef(null);
+
+  const handleDistrictClick = (district) => {
+    if (districtHandlerRef.current) {
+      districtHandlerRef.current(district);
+    }
+  };
 
   return (
     <section className="min-w-[320px] max-w-[320px] flex flex-col justify-start items-center gap-y-4 px-4 py-4">
@@ -79,7 +87,7 @@ const RightBar = () => {
         </div>
 
         <Label className="font-normal py-1.5 text-secondary">장소</Label>
-        <NaverMap />
+        <NaverMap onDistrictClick={(handler) => (districtHandlerRef.current = handler)} />
         <div className="pt-2 pb-2 flex flex-row flex-wrap justify-start items-center gap-x-2 gap-y-2">
           {districts.map((district) => (
             <Button
@@ -87,6 +95,7 @@ const RightBar = () => {
               variant="ghost"
               size="sm"
               className="px-2.5 h-7 font-normal  hover:bg-[#193fff] focus:bg-[#193fff] hover:text-white focus:text-white leading-normal rounded-full"
+              onClick={() => handleDistrictClick(district)}
             >
               {district}
             </Button>

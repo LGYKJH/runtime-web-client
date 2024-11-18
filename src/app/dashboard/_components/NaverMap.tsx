@@ -1,8 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-const NaverMap = () => {
+const districtCoordinates = {
+  종로구: { lat: 37.5729503, lng: 126.9793579 },
+  중구: { lat: 37.5637686, lng: 126.9979656 },
+  강남구: { lat: 37.5172363, lng: 127.0473248 },
+  서초구: { lat: 37.4835754, lng: 127.0326464 },
+  송파구: { lat: 37.5145432, lng: 127.1059212 },
+  마포구: { lat: 37.563761, lng: 126.908421 },
+  영등포구: { lat: 37.5263943, lng: 126.8963031 },
+  강서구: { lat: 37.5509645, lng: 126.849532 },
+  관악구: { lat: 37.4787191, lng: 126.9519779 },
+  노원구: { lat: 37.6542584, lng: 127.0565845 },
+  성북구: { lat: 37.5891001, lng: 127.0165732 },
+  은평구: { lat: 37.6185557, lng: 126.9273747 },
+};
+
+const NaverMap = ({ onDistrictClick }) => {
+  const mapRef = useRef(null);
+
   useEffect(() => {
     const initializeMap = () => {
       if (!window.naver) return;
@@ -10,15 +27,23 @@ const NaverMap = () => {
       const mapOptions = {
         center: new window.naver.maps.LatLng(37.5665, 126.978), // 서울 중심 좌표
         zoom: 12, // 초기 확대/축소 레벨
+        zoomControl: false,
+        mapTypeControl: false,
+        logoControl: false,
+        scaleControl: false,
+        mapDataControl: false,
       };
 
       const map = new window.naver.maps.Map("map", mapOptions);
+      mapRef.current = map;
 
-      // 예시: 마커 추가
-      new window.naver.maps.Marker({
-        position: new window.naver.maps.LatLng(37.5665, 126.978),
-        map,
-        title: "서울특별시",
+      // 마커 추가
+      Object.entries(districtCoordinates).forEach(([district, coord]) => {
+        new window.naver.maps.Marker({
+          position: new window.naver.maps.LatLng(coord.lat, coord.lng),
+          map,
+          title: district,
+        });
       });
     };
 
@@ -29,6 +54,16 @@ const NaverMap = () => {
       return () => window.removeEventListener("load", initializeMap);
     }
   }, []);
+
+  const moveToDistrict = (district) => {
+    if (mapRef.current && districtCoordinates[district]) {
+      const { lat, lng } = districtCoordinates[district];
+      mapRef.current.setCenter(new window.naver.maps.LatLng(lat, lng));
+      mapRef.current.setZoom(14); // 줌 레벨 변경
+    }
+  };
+
+  onDistrictClick(moveToDistrict);
 
   return (
     <div

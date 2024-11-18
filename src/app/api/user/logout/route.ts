@@ -10,6 +10,7 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     // 백엔드 요청 실패 시 에러 처리

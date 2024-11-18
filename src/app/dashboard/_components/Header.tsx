@@ -20,6 +20,7 @@ const Header = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -35,7 +36,7 @@ const Header = () => {
 
       window.location.href = "/login";
     } catch (error) {
-      console.error("로그아웃 중 오류 발생:", error);
+      console.log("로그아웃 중 오류 발생:", error);
       alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
