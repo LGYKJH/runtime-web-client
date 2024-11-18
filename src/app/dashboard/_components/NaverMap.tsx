@@ -52,6 +52,11 @@ const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
           position: new window.naver.maps.LatLng(coord.lat, coord.lng),
           map,
           title: district,
+          icon: {
+            url: "/icons/icon-marker.svg", // 커스텀 마커 이미지 경로
+            size: new window.naver.maps.Size(48, 48), // 이미지 크기
+            anchor: new window.naver.maps.Point(24, 48), // 중심점 기준 앵커
+          },
         });
       });
     };
