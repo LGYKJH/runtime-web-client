@@ -1,8 +1,11 @@
 import "./globals.css";
+import Script from "next/script";
 import type { Metadata } from "next";
-import Script from "next/script"; // Script를 import
 
-import { Pretendard, SpoqaHanSans } from "@/lib/fonts";
+import { Toaster } from "sonner";
+
+import { SpoqaHanSans } from "@/lib/fonts";
+
 import DarkModeHandler from "./_components/DarkModeHandler";
 
 export const metadata: Metadata = {
@@ -25,6 +28,7 @@ export default function RootLayout({
       </head>
       <body className={`${SpoqaHanSans.className} antialiased`}>
         <DarkModeHandler />
+        <Toaster />
         {children}
       </body>
     </html>

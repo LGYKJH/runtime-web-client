@@ -57,7 +57,8 @@ export async function POST(request: Request) {
     }
 
     // 클라이언트로 성공 응답 전송
-    return NextResponse.json({ message: "로그인 성공", data: responseData });
+    console.log(responseData);
+    return NextResponse.json({ data: responseData });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
