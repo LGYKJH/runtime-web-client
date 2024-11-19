@@ -25,6 +25,11 @@ export default function RootLayout({
           src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}`}
           strategy="beforeInteractive"
         />
+        {/* Daum Postcode API */}
+        <Script
+          src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+          strategy="beforeInteractive"
+        />
       </head>
       <body className={`${SpoqaHanSans.className} antialiased`}>
         <DarkModeHandler />
