@@ -2,21 +2,19 @@
 
 import { useEffect, useRef } from "react";
 
-
-// 지역 좌표 타입
 const districtCoordinates = {
-  종로구: { lat: 37.5729503, lng: 126.9793579 },
-  중구: { lat: 37.5637686, lng: 126.9979656 },
   강남구: { lat: 37.5172363, lng: 127.0473248 },
-  서초구: { lat: 37.4835754, lng: 127.0326464 },
-  송파구: { lat: 37.5145432, lng: 127.1059212 },
-  마포구: { lat: 37.563761, lng: 126.908421 },
-  영등포구: { lat: 37.5263943, lng: 126.8963031 },
   강서구: { lat: 37.5509645, lng: 126.849532 },
+  강북구: { lat: 37.6397511, lng: 127.0251595 },
+  강동구: { lat: 37.5301251, lng: 127.1237629 },
   관악구: { lat: 37.4787191, lng: 126.9519779 },
   노원구: { lat: 37.6542584, lng: 127.0565845 },
-  성북구: { lat: 37.5891001, lng: 127.0165732 },
+  마포구: { lat: 37.563761, lng: 126.908421 },
+  서초구: { lat: 37.4835754, lng: 127.0326464 },
+  송파구: { lat: 37.5145432, lng: 127.1059212 },
+  영등포구: { lat: 37.5263943, lng: 126.8963031 },
   은평구: { lat: 37.6185557, lng: 126.9273747 },
+  종로구: { lat: 37.5729503, lng: 126.9793579 },
 };
 
 // 지역 이름 타입
@@ -73,7 +71,9 @@ const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
   const moveToDistrict = (district: Districts) => {
     if (mapRef.current && districtCoordinates[district]) {
       const { lat, lng } = districtCoordinates[district];
-      mapRef.current.setCenter(new window.naver.maps.LatLng(lat, lng) as naver.maps.LatLng);
+      mapRef.current.setCenter(
+        new window.naver.maps.LatLng(lat, lng) as naver.maps.LatLng
+      );
       mapRef.current.setZoom(14); // 줌 레벨 변경
     }
   };

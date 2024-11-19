@@ -35,12 +35,15 @@ const UserAuthForm = () => {
     if (id === "email") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        emailError: value.includes("@") ? "" : "유효한 이메일 주소를 입력하세요.",
+        emailError: value.includes("@")
+          ? ""
+          : "유효한 이메일 주소를 입력하세요.",
       }));
     } else if (id === "password") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        passwordError: value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
+        passwordError:
+          value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
       }));
     }
   };
@@ -72,7 +75,7 @@ const UserAuthForm = () => {
         toast.success(data.data.message);
         setTimeout(() => {
           router.push("/dashboard");
-        }, 1500);
+        }, 500);
       }
     } catch (error) {
       console.log("서버와의 통신 중 오류가 발생했습니다.");

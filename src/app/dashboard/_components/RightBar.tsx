@@ -7,50 +7,57 @@ import NaverMap from "./NaverMap";
 
 // 지역 이름 타입
 type Districts =
-  | "종로구"
-  | "중구"
   | "강남구"
-  | "서초구"
-  | "송파구"
-  | "마포구"
-  | "영등포구"
   | "강서구"
+  | "강북구"
+  | "강동구"
   | "관악구"
   | "노원구"
-  | "성북구"
-  | "은평구";
+  | "마포구"
+  | "서초구"
+  | "송파구"
+  | "영등포구"
+  | "은평구"
+  | "종로구";
 
 const RightBar = () => {
   const days = ["월", "화", "수", "목", "금", "토", "일"];
   const sports = [
-    "러닝",
-    "마라톤",
+    "로드 런",
+    "트레일 런",
     "하프 마라톤",
-    "경보",
-    "트레일 러닝",
-    "펫 러닝",
-    "피크닉",
-    "글램핑",
-    "캠핑",
+    "마라톤",
+    "리커버리 런",
+    "조깅",
   ];
-  const crewSizes = ["1 ~ 4명", "5 ~ 8명", "9 ~ 12명", "13 ~ 16명", "17 ~ 20명", "20명 이상"];
+  const crewSizes = [
+    "1 ~ 4명",
+    "5 ~ 8명",
+    "9 ~ 12명",
+    "13 ~ 16명",
+    "17 ~ 20명",
+    "20명 이상",
+  ];
+
   const districts: Districts[] = [
-    "종로구",
-    "중구",
     "강남구",
-    "서초구",
-    "송파구",
-    "마포구",
-    "영등포구",
     "강서구",
+    "강북구",
+    "강동구",
     "관악구",
     "노원구",
-    "성북구",
+    "마포구",
+    "서초구",
+    "송파구",
+    "영등포구",
     "은평구",
+    "종로구",
   ];
 
   // MutableRefObject로 타입 지정
-  const districtHandlerRef = useRef<((district: Districts) => void) | null>(null);
+  const districtHandlerRef = useRef<((district: Districts) => void) | null>(
+    null
+  );
 
   const handleDistrictClick = (district: Districts) => {
     if (districtHandlerRef.current) {
@@ -108,7 +115,7 @@ const RightBar = () => {
             (districtHandlerRef.current = handler)
           }
         />
-        <div className="pt-2 pb-2 flex flex-row flex-wrap justify-start items-center gap-x-2 gap-y-2">
+        <div className="pt-2 flex flex-row flex-wrap justify-start items-center gap-x-2 gap-y-2">
           {districts.map((district) => (
             <Button
               key={district}
