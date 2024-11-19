@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  console.log("Middleware 실행됨"); // 요청 확인 로그
-
   // 쿠키 객체 생성
   const cookieStore = await cookies();
 

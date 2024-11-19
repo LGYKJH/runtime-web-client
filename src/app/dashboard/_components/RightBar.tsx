@@ -66,7 +66,7 @@ const RightBar = () => {
   };
 
   return (
-    <section className="min-w-[320px] max-w-[320px] flex flex-col justify-start items-center gap-y-4 px-4 py-4">
+    <section className="min-w-[320px] max-w-[320px] flex flex-col justify-start items-center gap-y-4 px-4 py-4 border-l-[0.5px] border-l-sidebar-border">
       <div className="w-full px-1 pt-1.5 pb-2 gap-y-1 flex flex-col justify-start items-start">
         <h4 className="pb-2">필터</h4>
         <Label className="font-normal py-1.5 text-secondary">요일</Label>

@@ -40,7 +40,7 @@ const Header = () => {
   };
 
   return (
-    <section className="w-full flex flex-row justify-between items-center px-7 py-5">
+    <section className="w-full flex flex-row justify-between items-center px-7 py-5 border-b-[0.5px] border-b-sidebar-border">
       <div className="flex flex-row justify-center items-center gap-x-2">
         <SidebarTrigger />
         <div className="h-7 flex flex-row justify-center items-center text-center px-2 pt-0.5 gap-4 tracking-tight">
