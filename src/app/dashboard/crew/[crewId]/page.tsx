@@ -1,3 +1,5 @@
+"use client";
+
 import { useParams } from "next/navigation";
 import CrewSection from "../_sections/CrewSection";
 import RightBar from "../../_components/RightBar";
