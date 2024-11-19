@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const BASE_URL = `${process.env.BASE_URL}/users/login`;
+  const BASE_URL = `${process.env.BASE_URL}`;
 
   try {
     // 클라이언트 요청에서 필요한 데이터 추출
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     } = await request.json();
 
     // 서버에 전달할 회원가입 데이터 구성
-    const apiUrl = `${BASE_URL}/user/sign-up`;
+    const apiUrl = `${BASE_URL}/user/register`;
 
     const body = {
       userEmail: email, // 클라이언트 요청의 `email`을 DTO의 `userEmail`에 매핑

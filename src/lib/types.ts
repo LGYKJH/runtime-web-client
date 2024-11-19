@@ -14,7 +14,7 @@ export type RegisterFormType = {
   userBirth: string;
   userAddress: string;
   userGoal: string;
-  userPreference: string;
+  userPreference: string[];
 };
 
 // 유효성 검사 에러 메시지 타입

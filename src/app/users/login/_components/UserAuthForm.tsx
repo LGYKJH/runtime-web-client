@@ -126,6 +126,10 @@ const UserAuthForm = () => {
           {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
           로그인
         </Button>
+
+        <a href="/users/register" className="text-sm text-blue-500 hover:underline mt-2">
+          회원가입 
+        </a>
       </form>
 
       {/* <div className="mt-4 flex flex-col justify-center items-start gap-y-0.5">
