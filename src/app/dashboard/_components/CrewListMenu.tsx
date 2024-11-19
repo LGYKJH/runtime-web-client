@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
@@ -8,6 +9,8 @@ interface CrewListMenuProps {
 }
 
 const CrewListMenu = ({ menuType, setMenuType }: CrewListMenuProps) => {
+  const router = useRouter();
+
   const handleMenuButton = (text: string) => {
     setMenuType(text);
   };
@@ -37,6 +40,9 @@ const CrewListMenu = ({ menuType, setMenuType }: CrewListMenuProps) => {
       <Button
         variant="link"
         className="text-sm text-primary font-normal h-6 w-[90px]"
+        onClick={() => {
+          router.push("/dashboard/createCrew");
+        }}
       >
         <h4>크루 만들기</h4>
         <ChevronRight size={14} />
