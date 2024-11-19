@@ -22,11 +22,12 @@ type Districts = keyof typeof districtCoordinates;
 
 // NaverMapProps 타입 정의
 type NaverMapProps = {
+  id: string; // 고유한 ID
   onDistrictClick: (handler: (district: Districts) => void) => void;
 };
 
-const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
-  const mapRef = useRef<naver.maps.Map | null>(null);
+const NaverMap: React.FC<NaverMapProps> = ({ id, onDistrictClick }) => {
+  const naverMapRef = useRef<naver.maps.Map | null>(null); // ref 이름 변경
 
   useEffect(() => {
     const initializeMap = () => {
@@ -42,8 +43,8 @@ const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
         mapDataControl: false,
       };
 
-      const map = new window.naver.maps.Map("map", mapOptions);
-      mapRef.current = map as naver.maps.Map;
+      const map = new window.naver.maps.Map(id, mapOptions);
+      naverMapRef.current = map as any;
 
       // 마커 추가
       Object.entries(districtCoordinates).forEach(([district, coord]) => {
@@ -66,15 +67,15 @@ const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
       window.addEventListener("load", initializeMap);
       return () => window.removeEventListener("load", initializeMap);
     }
-  }, []);
+  }, [id]);
 
   const moveToDistrict = (district: Districts) => {
-    if (mapRef.current && districtCoordinates[district]) {
+    if (naverMapRef.current && districtCoordinates[district]) {
       const { lat, lng } = districtCoordinates[district];
-      mapRef.current.setCenter(
+      naverMapRef.current.setCenter(
         new window.naver.maps.LatLng(lat, lng) as naver.maps.LatLng
       );
-      mapRef.current.setZoom(14); // 줌 레벨 변경
+      naverMapRef.current.setZoom(14); // 줌 레벨 변경
     }
   };
 
@@ -82,7 +83,7 @@ const NaverMap: React.FC<NaverMapProps> = ({ onDistrictClick }) => {
 
   return (
     <div
-      id="map"
+      id={id} // 고유 ID 사용
       style={{
         width: "100%",
         height: "100%",
