@@ -6,35 +6,50 @@ export async function POST(request: Request) {
 
   try {
     // 클라이언트 요청에서 필요한 데이터 추출
+    const requestData = await request.json();
     const {
-      email,
-      password,
-      name,
-      nickname,
-      gender,
-      birth,
-      address,
-      goal,
-      preference,
-    } = await request.json();
+      userEmail,
+      userPassword,
+      userName,
+      userNickname,
+      userGender,
+      userBirth,
+      userAddress,
+      userGoal,
+      userPreference,
+    } = requestData;
+
+    // userBirth 변환 (YYYY-MM-DD -> YYYYMMDD)
+    const formattedBirth =
+      userBirth && typeof userBirth === "string"
+        ? userBirth.replace(/-/g, "") // 하이픈(-) 제거
+        : null;
 
     // 서버에 전달할 회원가입 데이터 구성
-    const apiUrl = `${BASE_URL}/user/register`;
+    const apiUrl = `${BASE_URL}/users/register`;
+
+    const currentDate = new Date()
+      .toLocaleString("sv-SE", { timeZone: "UTC" })
+      .replace(" ", "T");
 
     const body = {
-      userEmail: email, // 클라이언트 요청의 `email`을 DTO의 `userEmail`에 매핑
-      userPassword: password, // 클라이언트 요청의 `password`를 `userPassword`에 매핑
-      userName: name, // 클라이언트 요청의 `name`을 `userName`에 매핑
-      userNickname: nickname, // 클라이언트 요청의 `nickname`을 `userNickname`에 매핑
-      userGender: gender, // 클라이언트 요청의 `gender`를 `userGender`에 매핑
-      userBirth: birth, // 클라이언트 요청의 `birth`를 `userBirth`에 매핑
-      userAddress: address, // 클라이언트 요청의 `address`를 `userAddress`에 매핑
-      userGoal: goal, // 클라이언트 요청의 `goal`을 `userGoal`에 매핑
-      userPreference: preference, // 클라이언트 요청의 `preference`를 `userPreference`에 매핑
-      userCreatedDt: new Date().toISOString(), // 현재 시각을 `userCreatedDt`로 설정
-      userUpdatedDt: new Date().toISOString(), // 현재 시각을 `userUpdatedDt`로 설정
-      userEmailIsAuthenticated: 0, // 이메일 인증 여부 기본값 설정
+      userEmail: userEmail, // 정상적으로 받은 데이터를 매핑
+      userPassword: userPassword,
+      userName: userName,
+      userNickname: userNickname,
+      userGender: userGender,
+      userBirth: formattedBirth,
+      userAddress: userAddress,
+      userGoal: userGoal,
+      userPreference: userPreference,
+      userCreatedDt: currentDate, // 현재 시각
+      userUpdatedDt: currentDate, // 현재 시각
+      userOauthId: null, // 기본값
+      userProfile: null, // 기본값
+      userEmailIsAuthenticated: 1, // 기본값
     };
+
+    console.log("출력: " + JSON.stringify(body));
 
     // API 요청
     const response = await fetch(apiUrl, {
@@ -65,10 +80,12 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json(
+    /*  return NextResponse.json(
       { message: "회원가입이 성공했습니다.", data: responseData },
       { status: 200 }
-    );
+    ); */
+    // 회원가입 성공 -> 리다이렉션
+    return NextResponse.redirect(new URL("/users/login", request.url));
   } catch (error) {
     const errorMessage =
       error instanceof Error

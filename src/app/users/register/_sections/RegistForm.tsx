@@ -14,7 +14,6 @@ import Address from "@/components/ui/address";
 import StepNavigation from "../_components/StepNavigation";
 import { ErrorMessage, RegisterFormType } from "@/lib/types";
 
-
 // 스포츠 항목 리스트
 const sports = [
   "로드 런",
@@ -25,13 +24,11 @@ const sports = [
   "조깅",
 ];
 
-
 const STEPS = [
   ["userEmail", "userPassword", "userName"],
   ["userNickname", "userGender", "userBirth"],
   ["userAddress", "userGoal", "userPreference"],
 ];
-
 
 const LABELS: { [key: string]: string } = {
   userEmail: "이메일 주소",
@@ -45,14 +42,13 @@ const LABELS: { [key: string]: string } = {
   userPreference: "선호 유형",
 };
 
-
 export default function RegisterForm() {
   const [formData, setFormData] = useState<RegisterFormType>({
     userEmail: "",
     userPassword: "",
     userName: "",
     userNickname: "",
-    userGender: 0,
+    userGender: 1,
     userBirth: "",
     userAddress: "",
     userGoal: "",
@@ -98,7 +94,11 @@ export default function RegisterForm() {
   };
 
   // 주소 daum API
-  const handleAddressChange = (addressData: { postcode: string; address: string; detailAddress: string }) => {
+  const handleAddressChange = (addressData: {
+    postcode: string;
+    address: string;
+    detailAddress: string;
+  }) => {
     const fullAddress = `${addressData.address} ${addressData.detailAddress}`;
     setFormData((prevData) => ({
       ...prevData,
@@ -106,8 +106,7 @@ export default function RegisterForm() {
     }));
   };
 
-
-  // 라디오 박스 
+  // 라디오 박스
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setFormData((prevData) => ({
@@ -119,7 +118,6 @@ export default function RegisterForm() {
       userGender: "",
     }));
   };
-
 
   // Checkbox 변경 핸들러
   const handlePreferenceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,7 +142,10 @@ export default function RegisterForm() {
     currentStepFields.forEach((key) => {
       if (key === "userGender" && formData.userGender === null) {
         newErrors[key] = `${LABELS[key]}을(를) 선택하세요.`;
-      } else if (key === "userPreference" && formData.userPreference.length === 0) {
+      } else if (
+        key === "userPreference" &&
+        formData.userPreference.length === 0
+      ) {
         newErrors[key] = `${LABELS[key]}을(를) 선택하세요.`;
       } else if (!formData[key as keyof RegisterFormType]) {
         newErrors[key] = `${LABELS[key]}을(를) 입력하세요.`;
@@ -227,8 +228,8 @@ export default function RegisterForm() {
                           <input
                             type="radio"
                             name="userGender"
-                            value={0}
-                            checked={formData.userGender === 0}
+                            value={1}
+                            checked={formData.userGender === 1}
                             onChange={handleRadioChange}
                           />
                           남성
@@ -237,8 +238,8 @@ export default function RegisterForm() {
                           <input
                             type="radio"
                             name="userGender"
-                            value={1}
-                            checked={formData.userGender === 1}
+                            value={2}
+                            checked={formData.userGender === 2}
                             onChange={handleRadioChange}
                           />
                           여성
@@ -252,7 +253,7 @@ export default function RegisterForm() {
                     </div>
                   );
                 }
-                
+
                 if (key === "userBirth") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
@@ -295,7 +296,10 @@ export default function RegisterForm() {
                       </label>
                       <div className="flex flex-col gap-1">
                         {sports.map((sport) => (
-                          <label key={sport} className="flex items-center gap-2">
+                          <label
+                            key={sport}
+                            className="flex items-center gap-2"
+                          >
                             <input
                               type="checkbox"
                               value={sport}
