@@ -21,7 +21,10 @@ const CrewCard = () => {
           <h5 className="text-base font-bold text-primary">
             한강 크루팀 ( 신입 모집 )
           </h5>
-          <Badge className="w-16 h-6 flex flex-row justify-center items-center">
+          <Badge
+            variant="secondary"
+            className="w-16 h-6 flex flex-row justify-center items-center text-background font-light"
+          >
             대기 중
           </Badge>
         </div>
