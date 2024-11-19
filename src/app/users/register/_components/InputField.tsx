@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 
 type InputFieldProps = {
   id: string;
+  label: string;
   value: string;
   placeholder: string;
   error?: string;
@@ -12,6 +13,7 @@ type InputFieldProps = {
 
 export default function InputField({
   id,
+  label,
   value,
   placeholder,
   error,
@@ -19,9 +21,8 @@ export default function InputField({
 }: InputFieldProps) {
   return (
     <div className="flex flex-col space-y-1.5">
-      <span className="text-red-500 text-sm min-h-[1.5em]">{error || " "}</span>
-      <Label className="hidden" htmlFor={id}>
-        {id}
+      <Label htmlFor={id} className="text-sm font-medium">
+        {label}
       </Label>
       <Input
         id={id}
@@ -29,6 +30,10 @@ export default function InputField({
         value={value}
         onChange={onChange}
       />
+      {error && <span className="text-red-500 text-sm">{error}</span>}
+      <Label className="hidden" htmlFor={id}>
+        {id}
+      </Label>
     </div>
   );
 }
