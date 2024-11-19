@@ -4,7 +4,7 @@ import CrewList from "../_components/CrewList";
 
 const MainSection = () => {
   return (
-    <div className="w-full flex-1 flex flex-col justify-start items-center">
+    <div className="w-full flex-1 flex flex-col justify-start items-center overflow-hidden">
       <Header />
       <CrewList />
     </div>

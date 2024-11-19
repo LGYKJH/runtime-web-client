@@ -8,7 +8,7 @@ export default function DashboardPage() {
   return (
     <SidebarProvider>
       <LeftBar />
-      <main className="w-full min-h-screen flex flex-row">
+      <main className="w-full flex flex-row h-screen overflow-hidden">
         <MainSection />
         <RightBar />
       </main>

@@ -16,7 +16,7 @@ const CrewCard = () => {
           src="https://placehold.co/240x128"
         />
       </div>
-      <div className="bg-muted h-full flex-1 flex flex-col justify-start items-start px-6 py-6 rounded-lg">
+      <div className="bg-muted h-full flex-1 flex flex-col justify-start items-start px-6 py-6 rounded-lg mr-4">
         <div className="w-full flex flex-row justify-between items-center">
           <h5 className="text-base font-bold text-primary">
             한강 크루팀 ( 신입 모집 )
