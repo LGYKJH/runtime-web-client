@@ -67,7 +67,7 @@ const CreateRightBar = () => {
           ))}
         </div>
       </div>
-      <div className="absolute bottom-[54px] w-full flex flex-row justify-center items-center">
+      <div className="absolute bottom-[56px] w-full flex flex-row justify-center items-center">
         <Button className="w-[88%]">제출하기</Button>
       </div>
     </section>

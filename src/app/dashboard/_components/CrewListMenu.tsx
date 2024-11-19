@@ -21,11 +21,11 @@ const CrewListMenu = ({ menuType, setMenuType }: CrewListMenuProps) => {
         <Button
           variant="link"
           className={`text-base px-2 py-1 h-7 ${
-            menuType === "크루" ? "text-primary" : "text-secondary"
+            menuType === "참여중인 크루" ? "text-primary" : "text-secondary"
           }`}
-          onClick={() => handleMenuButton("크루")}
+          onClick={() => handleMenuButton("참여중인 크루")}
         >
-          <h4 className="font-semibold">크루</h4>
+          <h4 className="font-semibold">참여중인 크루</h4>
         </Button>
         <Button
           variant="link"

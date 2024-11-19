@@ -9,6 +9,7 @@ import LogoutIcon from "/public/icons/icon-unlock.svg";
 import LogoutIconDark from "/public/icons/icon-unlock-dark.svg";
 import { Button } from "@/components/ui/button";
 import DarkModeToggle from "@/app/_components/DarkModeToggle";
+import HeaderBreadcrumb from "./HeaderBreadcrumb";
 
 const Header = () => {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
@@ -43,11 +44,7 @@ const Header = () => {
     <section className="w-full flex flex-row justify-between items-center px-7 py-5 border-b-[0.5px] border-b-sidebar-border">
       <div className="flex flex-row justify-center items-center gap-x-2">
         <SidebarTrigger />
-        <div className="h-7 flex flex-row justify-center items-center text-center px-2 pt-0.5 gap-4 tracking-tight">
-          <h2 className="text-secondary">크루</h2>
-          <span className="text-secondary">&#124;</span>
-          <h3 className="text-primary">러닝</h3>
-        </div>
+        <HeaderBreadcrumb />
       </div>
       <div className="h-full flex flex-row justify-center items-center gap-x-10">
         <DarkModeToggle />

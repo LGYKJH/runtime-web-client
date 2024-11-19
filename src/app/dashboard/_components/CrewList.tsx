@@ -5,7 +5,7 @@ import CrewListMenu from "./CrewListMenu";
 import CrewCard from "./CrewCard";
 
 const CrewList = () => {
-  const [menuType, setMenuType] = useState<string>("크루");
+  const [menuType, setMenuType] = useState<string>("참여중인 크루");
 
   return (
     <div className="w-full flex flex-col justify-start items-center gap-y-7 pl-10 pr-7 py-7 flex-1 h-full">
