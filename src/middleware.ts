@@ -3,14 +3,11 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  // 쿠키 객체 생성
   const cookieStore = await cookies();
-
-  // `accessToken` 가져오기
   const accessToken = cookieStore.get("access_token")?.value;
+  const refreshToken = cookieStore.get("refresh_token")?.value;
 
   if (!accessToken) {
-    // accessToken이 없으면 로그인 페이지로 리다이렉트
     return NextResponse.redirect(new URL("/users/login", request.url));
   }
 
@@ -25,6 +22,19 @@ export async function middleware(request: NextRequest) {
   // 유효한 경우 요청을 그대로 전달
   return NextResponse.next();
 }
+
+// const validateToken = async (token: string) => {
+//   const BASE_URL = `${process.env.BASE_URL}/auth/validateToken`;
+
+//   try {
+//     const response = await fetch(BASE_URL, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
+//   } catch (error) {}
+// };
 
 // // 토큰 검증 함수 (예제: 실제 검증 API 호출 가능)
 // function validateToken(token: string): boolean {
@@ -41,7 +51,6 @@ export async function middleware(request: NextRequest) {
 //   }
 // }
 
-// matcher로 특정 경로만 검증
 export const config = {
   matcher: ["/dashboard/:path*"],
 };

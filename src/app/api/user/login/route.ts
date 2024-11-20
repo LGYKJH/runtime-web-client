@@ -6,7 +6,7 @@ export async function POST(request: Request) {
 
   try {
     const { email, password } = await request.json();
-    const body = { userId: 1, userEmail: email, userPassword: password };
+    const body = { userEmail: email, userPassword: password };
 
     // 백엔드 요청
     const response = await fetch(BASE_URL, {
