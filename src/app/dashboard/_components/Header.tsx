@@ -10,9 +10,12 @@ import LogoutIconDark from "/public/icons/icon-unlock-dark.svg";
 import { Button } from "@/components/ui/button";
 import DarkModeToggle from "@/app/_components/DarkModeToggle";
 import HeaderBreadcrumb from "./HeaderBreadcrumb";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
@@ -33,7 +36,8 @@ const Header = () => {
 
       const responseData = await response.json();
       console.log("로그아웃 성공:", responseData.message);
-      alert("로그아웃 성공!");
+      toast.success(responseData.message);
+      router.push("/users/login");
     } catch (error) {
       console.log("로그아웃 중 오류 발생:", error);
       alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
