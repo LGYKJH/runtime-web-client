@@ -10,6 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        pointColor: "#193FFF",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

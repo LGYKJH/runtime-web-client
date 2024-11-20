@@ -76,7 +76,7 @@ const RightBar = () => {
               key={day}
               variant="ghost"
               size="icon"
-              className="p-1 w-7 h-7 font-normal hover:bg-[#193fff] focus:bg-[#193fff] hover:text-white focus:text-white rounded-full"
+              className="p-1 w-7 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white rounded-full"
             >
               {day}
             </Button>
@@ -89,7 +89,7 @@ const RightBar = () => {
               key={sport}
               variant="ghost"
               size="sm"
-              className="px-2.5 h-7 font-normal hover:bg-[#193fff] focus:bg-[#193fff] hover:text-white focus:text-white leading-normal rounded-full"
+              className="px-2.5 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white leading-normal rounded-full"
             >
               {sport}
             </Button>
@@ -102,7 +102,7 @@ const RightBar = () => {
               key={size}
               variant="ghost"
               size="sm"
-              className="px-2.5 h-7 font-normal hover:bg-[#193fff] focus:bg-[#193fff] hover:text-white focus:text-white leading-normal rounded-full"
+              className="px-2.5 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white leading-normal rounded-full"
             >
               {size}
             </Button>
@@ -122,7 +122,7 @@ const RightBar = () => {
               key={district}
               variant="ghost"
               size="sm"
-              className="px-2.5 h-7 font-normal hover:bg-[#193fff] focus:bg-[#193fff] hover:text-white focus:text-white leading-normal rounded-full"
+              className="px-2.5 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white leading-normal rounded-full"
               onClick={() => handleDistrictClick(district)}
             >
               {district}

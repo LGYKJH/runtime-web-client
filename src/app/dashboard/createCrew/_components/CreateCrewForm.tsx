@@ -97,7 +97,7 @@ const CreateCrewForm = () => {
                       key={district}
                       variant="ghost"
                       size="sm"
-                      className="px-2.5 h-7 font-normal hover:bg-[#193fff] focus:bg-[#193fff] hover:text-white focus:text-white leading-normal rounded-full"
+                      className="px-2.5 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white leading-normal rounded-full"
                     >
                       {district}
                     </Button>

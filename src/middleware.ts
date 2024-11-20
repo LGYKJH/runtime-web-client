@@ -43,5 +43,5 @@ export async function middleware(request: NextRequest) {
 
 // matcher로 특정 경로만 검증
 export const config = {
-  matcher: ["/dashboard", "/profile/:path*"], // 보호할 경로 지정
+  matcher: ["/dashboard/:path*"],
 };
