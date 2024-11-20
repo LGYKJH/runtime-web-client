@@ -1,14 +1,40 @@
-import { Badge } from "@/components/ui/badge";
+"use client";
+
 import React from "react";
 
+import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 interface CrewCardProps {
-  title: string;
-  imageURL: string;
+  crewId: number;
+  crewName: string;
+  crewType: string;
+  crewGoal: string;
+  crewSize: number;
 }
 
-const CrewCard = () => {
+const CrewCard = ({
+  crewId,
+  crewName,
+  crewType,
+  crewGoal,
+  crewSize,
+}: CrewCardProps) => {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    toast.info("크루 상세 페이지로 이동합니다.");
+    setTimeout(() => {
+      router.push(`/dashboard/crew/${crewId}`);
+    }, 500);
+  };
+
   return (
-    <div className="w-full flex flex-row justify-start items-center gap-x-4 cursor-pointer">
+    <div
+      className="w-full flex flex-row justify-start items-center gap-x-4 cursor-pointer"
+      onClick={handleCardClick}
+    >
       <div className="overflow-hidden rounded-lg">
         <img
           alt="이미지"
@@ -18,9 +44,7 @@ const CrewCard = () => {
       </div>
       <div className="bg-muted h-full flex-1 flex flex-col justify-start items-start px-6 py-6 rounded-lg mr-6">
         <div className="w-full flex flex-row justify-between items-center">
-          <h5 className="text-base font-bold text-primary">
-            한강 크루팀 ( 신입 모집 )
-          </h5>
+          <h5 className="text-base font-bold text-primary">{crewName}</h5>
           <Badge
             variant="secondary"
             className="w-16 h-6 flex flex-row justify-center items-center text-background font-light"
@@ -28,18 +52,20 @@ const CrewCard = () => {
             대기 중
           </Badge>
         </div>
-        <span className="pt-2 text-sm text-secondary">
-          퇴근 후 부담없이 즐기는 루틴 런닝! **초보러너 환영
-        </span>
+        <div className="w-full max-w-full flex flex-row justify-items-start">
+          <span className="pt-2 text-sm text-secondary inline-block w-[400px] truncate">
+            {crewGoal}
+          </span>
+        </div>
         <div className="w-full flex flex-row justify-start items-center mt-4 gap-x-6">
           <span className="text-xs text-secondary font-normal">
-            &#35; 마라톤
+            &#35; {crewType}
           </span>
           <span className="text-xs text-secondary font-normal">
-            &#35; 한강대로변
+            &#35; 정원 &#58; {crewSize} 명
           </span>
           <span className="text-xs text-secondary font-normal">
-            &#35; 매주 금요일 오후 5시부터 7시
+            &#35; 정기 러닝 &#58; 매주 월요일
           </span>
         </div>
       </div>

@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const BASE_URL = `${process.env.BASE_URL}/auth/login`;
 
   try {
@@ -59,8 +59,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // 클라이언트로 성공 응답 전송
-    console.log(responseData);
     return NextResponse.json({ data: responseData });
   } catch (error) {
     const errorMessage =

@@ -45,14 +45,18 @@ const text = `안녕하세요! 🏃‍♂️ 관악구 대표 러닝 크루에 �
 🎉 달리는 발걸음, 우리가 만들어가는 이야기!
 모두 함께 뛰어보아요~ 🏃‍♀️🏃‍♂️`;
 
-const CrewInfoIntroduction = () => {
+interface CrewInfoIntroductionProps {
+  crewGoal: string;
+}
+
+const CrewInfoIntroduction = ({ crewGoal }: CrewInfoIntroductionProps) => {
   return (
     <div className="w-full flex flex-col justify-start items-start gap-y-6">
       <div className="w-full flex flex-col justify-items-start gap-y-2">
         <Label className="font-bold text-primary text-md">크루 소개</Label>
         <Separator className="bg-sidebar-border" />
       </div>
-      <p className="whitespace-pre-wrap">{text}</p>
+      <p className="whitespace-pre-wrap">{crewGoal}</p>
     </div>
   );
 };

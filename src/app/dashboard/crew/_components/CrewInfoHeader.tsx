@@ -6,7 +6,19 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-const CrewInfoHeader = () => {
+interface CrewInfoHeaderProps {
+  crewName: string;
+  crewType: string;
+  crewSize: number;
+  crewPlace: string;
+}
+
+const CrewInfoHeader = ({
+  crewName,
+  crewType,
+  crewSize,
+  crewPlace,
+}: CrewInfoHeaderProps) => {
   return (
     <div className="w-full flex flex-row justify-start items-start gap-x-8">
       <div className="w-full flex-1 flex flex-row justify-center items-center rounded-md overflow-hidden">
@@ -22,7 +34,7 @@ const CrewInfoHeader = () => {
       <div className="w-full flex-1 flex flex-col justify-start items-start gap-y-6">
         <div className="w-full flex flex-col justify-items-start gap-y-6">
           <Label className="text-[22px] leading-normal whitespace-nowrap">
-            🏃 관악구 대표 러닝크루 **신입 환영 🏃
+            {crewName}
           </Label>
           <Separator className="bg-sidebar-border" />
         </div>
@@ -43,7 +55,7 @@ const CrewInfoHeader = () => {
             >
               유형
             </Badge>
-            <Label className="font-normal">트레일 런, 리커버리 런</Label>
+            <Label className="font-normal">{crewType}</Label>
           </div>
           <div className="w-full flex flex-row justify-start items-center gap-x-6">
             <Badge
@@ -52,7 +64,9 @@ const CrewInfoHeader = () => {
             >
               인원
             </Badge>
-            <Label className="font-normal">현재 인원: 8, 정원: 20</Label>
+            <Label className="font-normal">
+              현재 인원: 8, 정원: {crewSize}
+            </Label>
           </div>
           <div className="w-full flex flex-row justify-start items-center gap-x-6">
             <Badge
@@ -61,7 +75,7 @@ const CrewInfoHeader = () => {
             >
               장소
             </Badge>
-            <Label className="font-normal">서울 관악 근린 공원</Label>
+            <Label className="font-normal">{crewPlace}</Label>
           </div>
         </div>
       </div>
