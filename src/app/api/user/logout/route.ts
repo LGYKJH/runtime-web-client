@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     const responseData = await response.json();
     console.log("응답 데이터:", responseData);
 
-    return NextResponse.json({ message: "로그아웃 성공", data: responseData });
+    return NextResponse.json(responseData );
   } catch (error) {
     const errorMessage =
       error instanceof Error
