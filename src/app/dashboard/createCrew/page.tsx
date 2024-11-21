@@ -31,7 +31,7 @@ export default function CreateCrewPage() {
         types,
         crewSize,
         crewGoal,
-        places: place,
+        place: place,
         crewProfile: null,
       };
 

@@ -29,7 +29,6 @@ const CrewList = () => {
     };
 
     fetchCrewList();
-    console.log(crewList);
   }, []);
 
   return (

@@ -7,20 +7,14 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 interface CrewCardProps {
-  crewId: number;
+  crewId: string;
   crewName: string;
   crewType: string;
   crewGoal: string;
   crewSize: number;
 }
 
-const CrewCard = ({
-  crewId,
-  crewName,
-  crewType,
-  crewGoal,
-  crewSize,
-}: CrewCardProps) => {
+const CrewCard = ({ crewId, crewName, crewType, crewGoal, crewSize }: CrewCardProps) => {
   const router = useRouter();
 
   const handleCardClick = () => {
@@ -58,12 +52,8 @@ const CrewCard = ({
           </span>
         </div>
         <div className="w-full flex flex-row justify-start items-center mt-4 gap-x-6">
-          <span className="text-xs text-secondary font-normal">
-            &#35; {crewType}
-          </span>
-          <span className="text-xs text-secondary font-normal">
-            &#35; 정원 &#58; {crewSize} 명
-          </span>
+          <span className="text-xs text-secondary font-normal">&#35; {crewType}</span>
+          <span className="text-xs text-secondary font-normal">&#35; 정원 &#58; {crewSize} 명</span>
           <span className="text-xs text-secondary font-normal">
             &#35; 정기 러닝 &#58; 매주 월요일
           </span>

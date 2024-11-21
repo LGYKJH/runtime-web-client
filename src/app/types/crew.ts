@@ -1,5 +1,5 @@
 export interface Crew {
-  crewId: number;
+  crewId: string;
   crewName: string;
   crewType: string;
   crewSize: number;
