@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, context: { params: { crewId: string } }) {
-  const { crewId } = context.params;
+export async function GET(request: NextRequest, { params }: { params: { crewId: string } }) {
+  const { crewId } = await params;
 
   if (!crewId) {
     return NextResponse.json({ error: "crewId is required" }, { status: 400 });
