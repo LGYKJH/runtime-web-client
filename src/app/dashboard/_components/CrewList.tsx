@@ -35,16 +35,18 @@ const CrewList = () => {
   return (
     <div className="w-full flex flex-col justify-start items-center gap-y-7 pl-10 pr-7 py-7 flex-1 h-full">
       <CrewListMenu menuType={menuType} setMenuType={setMenuType} />
-      {crewList.map((crew) => (
-        <CrewCard
-          key={crew.crewId}
-          crewId={crew.crewId}
-          crewName={crew.crewName}
-          crewType={crew.crewType}
-          crewGoal={crew.crewGoal}
-          crewSize={crew.crewSize}
-        />
-      ))}
+      <div className="w-full overflow-y-scroll scrollbar-none flex flex-col justify-start items-center gap-y-7">
+        {crewList.map((crew) => (
+          <CrewCard
+            key={crew.crewId}
+            crewId={crew.crewId}
+            crewName={crew.crewName}
+            crewType={crew.crewType}
+            crewGoal={crew.crewGoal}
+            crewSize={crew.crewSize}
+          />
+        ))}
+      </div>
     </div>
   );
 };

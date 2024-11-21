@@ -1,28 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { districtCoordinates, Districts } from "@/lib/districts";
 
-const districtCoordinates = {
-  강남구: { lat: 37.5172363, lng: 127.0473248 },
-  강서구: { lat: 37.5509645, lng: 126.849532 },
-  강북구: { lat: 37.6397511, lng: 127.0251595 },
-  강동구: { lat: 37.5301251, lng: 127.1237629 },
-  관악구: { lat: 37.4787191, lng: 126.9519779 },
-  노원구: { lat: 37.6542584, lng: 127.0565845 },
-  마포구: { lat: 37.563761, lng: 126.908421 },
-  서초구: { lat: 37.4835754, lng: 127.0326464 },
-  송파구: { lat: 37.5145432, lng: 127.1059212 },
-  영등포구: { lat: 37.5263943, lng: 126.8963031 },
-  은평구: { lat: 37.6185557, lng: 126.9273747 },
-  종로구: { lat: 37.5729503, lng: 126.9793579 },
-};
-
-// 지역 이름 타입
-type Districts = keyof typeof districtCoordinates;
-
-// NaverMapProps 타입 정의
 type NaverMapProps = {
-  id: string; // 고유한 ID
+  id: string;
   onDistrictClick: (handler: (district: Districts) => void) => void;
 };
 
@@ -72,9 +54,7 @@ const NaverMap: React.FC<NaverMapProps> = ({ id, onDistrictClick }) => {
   const moveToDistrict = (district: Districts) => {
     if (naverMapRef.current && districtCoordinates[district]) {
       const { lat, lng } = districtCoordinates[district];
-      naverMapRef.current.setCenter(
-        new window.naver.maps.LatLng(lat, lng) as naver.maps.LatLng
-      );
+      naverMapRef.current.setCenter(new window.naver.maps.LatLng(lat, lng) as naver.maps.LatLng);
       naverMapRef.current.setZoom(14); // 줌 레벨 변경
     }
   };

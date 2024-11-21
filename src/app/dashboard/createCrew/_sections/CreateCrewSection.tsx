@@ -1,13 +1,41 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import Header from "../../_components/Header";
-import CrewList from "../../_components/CrewList";
 import CreateCrewForm from "../_components/CreateCrewForm";
 
-const CreateCrewSection = () => {
+interface CreateCrewSectionProps {
+  crewName: string;
+  setCrewName: Dispatch<SetStateAction<string>>;
+  crewGoal: string;
+  setCrewGoal: Dispatch<SetStateAction<string>>;
+  crewProfile: File | null;
+  setCrewProfile: Dispatch<SetStateAction<File | null>>;
+  place: string;
+  setPlace: Dispatch<SetStateAction<string>>;
+}
+
+const CreateCrewSection = ({
+  crewName,
+  setCrewName,
+  crewGoal,
+  setCrewGoal,
+  crewProfile,
+  setCrewProfile,
+  place,
+  setPlace,
+}: CreateCrewSectionProps) => {
   return (
     <div className="w-full h-full flex-1 flex flex-col justify-start items-center overflow-hidden pb-16">
       <Header />
-      <CreateCrewForm />
+      <CreateCrewForm
+        crewName={crewName}
+        setCrewName={setCrewName}
+        crewGoal={crewGoal}
+        setCrewGoal={setCrewGoal}
+        crewProfile={crewProfile}
+        setCrewProfile={setCrewProfile}
+        place={place}
+        setPlace={setPlace}
+      />
     </div>
   );
 };
