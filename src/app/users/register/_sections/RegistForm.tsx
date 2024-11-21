@@ -13,6 +13,7 @@ import InputField from "../_components/InputField";
 import Address from "@/components/ui/address";
 import StepNavigation from "../_components/StepNavigation";
 import { ErrorMessage, RegisterFormType } from "@/lib/types";
+import { toast } from "sonner";
 
 // 스포츠 항목 리스트
 const sports = [
@@ -192,15 +193,25 @@ export default function RegisterForm() {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        console.log(data || "회원가입에 실패했습니다.");
-      } else {
-        console.log(data.message || "회원가입이 성공했습니다.");
+        const errorData = await response.json();
+        console.error("회원가입 실패:", errorData.error);
+        alert(errorData.error || "알 수 없는 오류가 발생했습니다.");
+        return;
+      }
+
+      // 성공 처리
+      const data = await response.json();
+      console.log("회원가입 성공:", data.message);
+
+      // 리다이렉션 처리
+      if (data.redirectTo) {
+        toast(data.message);
+        window.location.href = data.redirectTo;
       }
     } catch (error) {
-      console.log("서버와의 통신 중 오류가 발생했습니다.");
+      console.error("예외 발생:", error);
+      toast("서버와의 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
