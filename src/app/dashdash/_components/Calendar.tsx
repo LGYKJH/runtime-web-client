@@ -3,12 +3,32 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import {
-  dayNames,
-  getDaysInMonth,
-  getFirstDayOfMonth,
-  monthNames,
-} from "../_utils/calendarUtils";
+// 유틸리티 함수 및 상수
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
+
+const getDaysInMonth = (date: Date): number => {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+};
+
+const getFirstDayOfMonth = (date: Date): number => {
+  return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+};
+
 
 type CalendarProps = {
   onSelectDate?: (date: Date) => void;

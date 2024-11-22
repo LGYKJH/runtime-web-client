@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 
 interface CrewCardProps {
-  crewId: string;
+  crewId: number;
   crewName: string;
   crewType: string;
   crewGoal: string;
