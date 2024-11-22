@@ -1,5 +1,5 @@
 export interface Crew {
-  crewId: string;
+  crewId: number;
   crewName: string;
   crewType: string;
   crewSize: number;
@@ -9,4 +9,13 @@ export interface Crew {
   crewProfileImage: string;
   crewCreatedDt: string;
   crewUpdatedDt: string;
+}
+
+export interface CrewMember {
+  crewMemberId: number;
+  userId: number;
+  crewId: number;
+  crewMemberRole: number;
+  crewMemberJoinDt: string;
+  crewMemberConfirmedDt: string;
 }

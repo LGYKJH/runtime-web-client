@@ -5,7 +5,8 @@ export async function POST(request: NextRequest) {
   const BASE_URL = `${process.env.BASE_URL}/crews/create`;
 
   try {
-    const { crewName, types, crewSize, crewGoal, place, crewProfile } = await request.json();
+    const { crewName, types, crewSize, crewGoal, place, crewProfile, leaderId } =
+      await request.json();
 
     const body = {
       crewId: 0,
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
       crewCalendarTitle: "",
       crewPlace: place,
       crewProfileImage: crewProfile,
-      leaderId: 0,
+      leaderId: leaderId,
     };
 
     // 백엔드 요청

@@ -3,7 +3,7 @@ import Header from "../../_components/Header";
 import CrewDetailSection from "./CrewDetailSection";
 
 interface CrewSectionProps {
-  crewId: string;
+  crewId: number;
 }
 
 const CrewSection = ({ crewId }: CrewSectionProps) => {

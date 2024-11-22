@@ -3,8 +3,8 @@ import RegisterForm from "./_sections/RegistForm";
 
 export default function RegisterPage() {
   return (
-    <div>
+    <main>
       <RegisterForm />
-    </div>
+    </main>
   );
 }

@@ -1,12 +1,40 @@
 "use client";
-import React from "react";
+import { toast } from "sonner";
+import React, { useEffect, useState } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CrewMember } from "@/app/types/crew";
+
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const CrewRightBar = () => {
-  // 크루 멤버 배열 (이름과 역할 포함)
+interface CrewRightBarProps {
+  crewId: number;
+}
+
+const CrewRightBar = ({ crewId }: CrewRightBarProps) => {
+  const [crewMemberInfo, setCrewMemberInfo] = useState<CrewMember[]>();
+
+  useEffect(() => {
+    const fetchCrewMemberInfo = async () => {
+      try {
+        const response = await fetch(`/api/crew/getCrewMember/${crewId}`);
+        if (!response.ok) {
+          toast.error("여기야1");
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const data: CrewMember[] = await response.json();
+        setCrewMemberInfo(data);
+      } catch (error) {
+        toast.error("여기야2");
+        toast.error(error.message);
+      }
+    };
+    fetchCrewMemberInfo();
+    console.log(crewMemberInfo);
+  }, []);
+
   const members = [
     { name: "홍길동", role: "크루장", image: "/path/to/avatar1.png" },
     { name: "김철수", role: "크루원", image: "/path/to/avatar2.png" },
@@ -30,18 +58,13 @@ const CrewRightBar = () => {
               className="flex items-center gap-x-3 w-full px-2 py-2 rounded-lg hover:bg-muted"
             >
               <Avatar className="w-8 h-8">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt={member.name}
-                />
+                <AvatarImage src="https://github.com/shadcn.png" alt={member.name} />
                 <AvatarFallback>{member.name[0]}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
                 <span className="font-semibold text-sm">{member.name}</span>
                 {index === 0 ? (
-                  <span className="text-xs text-blue-500 font-medium">
-                    {member.role}
-                  </span>
+                  <span className="text-xs text-blue-500 font-medium">{member.role}</span>
                 ) : (
                   <span className="text-xs text-zinc-400">{member.role}</span>
                 )}

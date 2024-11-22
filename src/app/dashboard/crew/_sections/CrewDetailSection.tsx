@@ -6,7 +6,7 @@ import CrewInfoSection from "./CrewInfoSection";
 import CrewPlanSection from "./CrewPlanSection";
 
 interface CrewDetailSectionProps {
-  crewId: string;
+  crewId: number;
 }
 
 const CrewDetailSection = ({ crewId }: CrewDetailSectionProps) => {
