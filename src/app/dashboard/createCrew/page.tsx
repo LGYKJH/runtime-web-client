@@ -4,11 +4,14 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useUserStore } from "@/app/stores/userStore";
+
 import CreateRightBar from "./_components/CreateRightBar";
 import CreateCrewSection from "./_sections/CreateCrewSection";
 
 export default function CreateCrewPage() {
   const router = useRouter();
+  const user = useUserStore((state) => state.user);
 
   const [crewProfile, setCrewProfile] = useState<File | null>(null);
   const [crewName, setCrewName] = useState<string>("");
@@ -67,7 +70,8 @@ export default function CreateCrewPage() {
         crewSize,
         crewGoal,
         place,
-        crewProfile: uploadedImageUrl, // 업로드된 이미지 URL 사용
+        crewProfile: uploadedImageUrl,
+        leaderId: user.userId,
       };
 
       console.log("전송 데이터:", requestBody);
