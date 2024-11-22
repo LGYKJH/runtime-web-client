@@ -12,9 +12,10 @@ import {
 
 type CalendarProps = {
   onSelectDate?: (date: Date) => void;
+  highlightDates?: { [key: string]: string[] }; // 날짜별 계획 배열 (e.g., "2023-11-21": ["Plan A", "Plan B"])
 };
 
-const Calendar = ({ onSelectDate }: CalendarProps) => {
+const Calendar = ({ onSelectDate, highlightDates }: CalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -57,23 +58,29 @@ const Calendar = ({ onSelectDate }: CalendarProps) => {
 
     // 현재 달 날짜 추가
     for (let day = 1; day <= daysInMonth; day++) {
+      const dateKey = `${currentDate.getFullYear()}-${String(
+        currentDate.getMonth() + 1
+      ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const plans = highlightDates?.[dateKey] || [];
+
+      
       const isSelected =
         selectedDate?.getDate() === day &&
         selectedDate?.getMonth() === currentDate.getMonth() &&
         selectedDate?.getFullYear() === currentDate.getFullYear();
       days.push(
-        <button
-          key={day}
-          onClick={() => handleDateClick(day)}
-          className={`mx-2 h-6 w-6 text-xs font-medium text-[#101010] rounded-full flex items-center justify-center
-                       ${
-                         isSelected
-                           ? "bg-[#006ffd] text-white"
-                           : "hover:bg-gray-100"
-                       }`}
-        >
-          {day}
-        </button>
+        <div key={day} className="flex flex-col items-center">
+          <button
+            onClick={() => handleDateClick(day)}
+            className={`mx-2 h-6 w-6 text-xs font-medium text-[#101010] rounded-full flex items-center justify-center
+                        ${isSelected ? "bg-[#006ffd] text-white" : "hover:bg-gray-100"}`}
+          >
+            {day}
+          </button>
+          {plans.length > 0 && (
+            <div className="text-[10px] text-gray-500 mt-1">{plans[0]}</div>
+          )}
+        </div>
       );
     }
 
