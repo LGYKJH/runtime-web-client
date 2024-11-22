@@ -42,6 +42,7 @@ const CrewInfoSection = ({ crewId }: CrewInfoSectionProps) => {
             crewType={crewBasicInfo.crewType}
             crewSize={crewBasicInfo.crewSize}
             crewPlace={crewBasicInfo.crewPlace}
+            crewProfileImage={crewBasicInfo.crewProfileImage}
           />
           <CrewInfoReviewList />
           <CrewInfoIntroduction crewGoal={crewBasicInfo.crewGoal} />

@@ -18,26 +18,61 @@ export default function CreateCrewPage() {
   const [types, setTypes] = useState<string[]>([]);
   const [crewSize, setCrewSize] = useState<number>();
 
+  const uploadCrewImage = async (file: File): Promise<string> => {
+    const fileName = `${Date.now()}_${file.name}`;
+    const reader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+      reader.onload = async () => {
+        try {
+          const base64 = reader.result?.toString().split(",")[1]; // Base64 인코딩
+          const response = await fetch("/api/crew/uploadCrewImage", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ file: base64, fileName }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            reject(new Error(errorData.error));
+          }
+
+          const { url } = await response.json();
+          resolve(url);
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      reader.onerror = () => reject(new Error("파일 읽기 실패"));
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleCreateCrew = async () => {
     try {
-      if (!crewName || !crewGoal || !place || !crewSize) {
+      if (!crewName || !crewGoal || !place || !crewSize || !crewProfile) {
         toast.warning("크루 생성에 필요한 정보를 모두 입력해주세요!");
         return;
       }
 
-      // 요청 본문 생성
+      // 이미지 업로드
+      toast.info("이미지를 업로드 중입니다...");
+      const uploadedImageUrl = await uploadCrewImage(crewProfile);
+
+      // 크루 생성 요청 본문
       const requestBody = {
         crewName,
         types,
         crewSize,
         crewGoal,
-        place: place,
-        crewProfile: null,
+        place,
+        crewProfile: uploadedImageUrl, // 업로드된 이미지 URL 사용
       };
 
       console.log("전송 데이터:", requestBody);
 
-      // API 요청
+      // 크루 생성 API 요청
       const response = await fetch("/api/crew/createCrew", {
         method: "POST",
         headers: {
@@ -46,14 +81,13 @@ export default function CreateCrewPage() {
         body: JSON.stringify(requestBody),
       });
 
-      // 응답 처리
       if (response.ok) {
         const data = await response.json();
         console.log("생성 성공:", data);
         toast.success("크루가 성공적으로 생성되었습니다!");
         setTimeout(() => {
           router.push("/dashboard");
-        });
+        }, 1000);
       } else {
         const error = await response.json();
         console.error("생성 실패:", error);

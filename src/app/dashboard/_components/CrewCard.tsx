@@ -5,6 +5,7 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface CrewCardProps {
   crewId: string;
@@ -12,9 +13,17 @@ interface CrewCardProps {
   crewType: string;
   crewGoal: string;
   crewSize: number;
+  crewProfileImage: string;
 }
 
-const CrewCard = ({ crewId, crewName, crewType, crewGoal, crewSize }: CrewCardProps) => {
+const CrewCard = ({
+  crewId,
+  crewName,
+  crewType,
+  crewGoal,
+  crewSize,
+  crewProfileImage,
+}: CrewCardProps) => {
   const router = useRouter();
 
   const handleCardClick = () => {
@@ -29,13 +38,20 @@ const CrewCard = ({ crewId, crewName, crewType, crewGoal, crewSize }: CrewCardPr
       className="w-full flex flex-row justify-start items-center gap-x-4 cursor-pointer"
       onClick={handleCardClick}
     >
-      <div className="overflow-hidden rounded-lg">
-        <img
-          alt="이미지"
-          className="w-[240px] h-[128px] object-cover"
-          src="https://placehold.co/240x128"
-        />
-      </div>
+      {crewProfileImage ? (
+        <picture className="relative w-[240px] h-[128px] overflow-hidden rounded-md">
+          <Image src={crewProfileImage} alt="크루 프로필 이미지" className="object-cover" fill />
+        </picture>
+      ) : (
+        <picture className="relative w-[240px] h-[128px] overflow-hidden rounded-md">
+          <Image
+            src="/images/bg-run-1.jpg"
+            alt="크루 프로필 이미지"
+            className="object-cover"
+            fill
+          />
+        </picture>
+      )}
       <div className="bg-muted h-full flex-1 flex flex-col justify-start items-start px-6 py-6 rounded-lg mr-6">
         <div className="w-full flex flex-row justify-between items-center">
           <h5 className="text-base font-bold text-primary">{crewName}</h5>

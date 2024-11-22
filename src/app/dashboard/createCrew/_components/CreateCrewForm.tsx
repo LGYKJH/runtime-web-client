@@ -16,6 +16,7 @@ import {
 import Map from "./Map";
 import { Districts, districts, districtCoordinates } from "@/lib/districts";
 import Image from "next/image";
+import ImageUploader from "@/app/_components/ImageUploader";
 
 interface CreateCrewFormProps {
   crewName: string;
@@ -62,11 +63,6 @@ const CreateCrewForm = ({
     setCrewGoal(e.target.value);
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    setCrewProfile(file || null);
-  };
-
   return (
     <div className="w-full flex flex-col justify-start items-start gap-y-4 pl-10 pr-10 py-7 flex-1 h-full">
       <div className="w-full flex flex-row justify-between items-center px-2 pt-1 pb-4">
@@ -74,33 +70,7 @@ const CreateCrewForm = ({
       </div>
       <div className="w-full h-full flex-1 flex flex-row justify-start items-start gap-x-6">
         <div className="flex flex-col justify-start items-start gap-y-4">
-          <div
-            className="px-2 flex flex-col gap-y-2 cursor-pointer" // 커서 포인터 추가
-            onClick={() => document.getElementById("crew_photo")?.click()} // input 파일 선택 트리거
-          >
-            <Label htmlFor="crew_photo" className="cursor-pointer text-secondary font-normal">
-              대표 크루 사진
-            </Label>
-            <Input
-              type="file"
-              id="crew_photo"
-              className="border-none cursor-pointer hidden"
-              onChange={handlePhotoChange}
-            />
-            <div className="flex flex-col justify-start items-start">
-              <Image
-                alt="이미지"
-                width={240}
-                height={128}
-                className="object-cover rounded-md"
-                src={
-                  crewProfile
-                    ? URL.createObjectURL(crewProfile)
-                    : "/images/image-picker-default.png"
-                }
-              />
-            </div>
-          </div>
+          <ImageUploader file={crewProfile} setFile={setCrewProfile} />
 
           <div className="px-2 flex flex-col gap-y-2">
             <Label htmlFor="place" className="text-secondary font-normal">

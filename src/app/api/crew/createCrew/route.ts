@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   const BASE_URL = `${process.env.BASE_URL}/crews/create`;
 
   try {
-    const { crewName, types, crewSize, crewGoal, place } = await request.json();
+    const { crewName, types, crewSize, crewGoal, place, crewProfile } = await request.json();
 
     const body = {
       crewId: 0,
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       crewGoal: crewGoal,
       crewCalendarTitle: "",
       crewPlace: place,
-      crewProfileImage: "",
+      crewProfileImage: crewProfile,
       leaderId: 0,
     };
 

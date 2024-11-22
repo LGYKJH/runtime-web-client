@@ -7,7 +7,6 @@ import { Crew } from "@/app/types/crew";
 import CrewCard from "./CrewCard";
 import CrewListMenu from "./CrewListMenu";
 import { toast } from "sonner";
-import Link from "next/link";
 
 const CrewList = () => {
   const [crewList, setCrewList] = useState<Crew[]>([]);
@@ -43,6 +42,7 @@ const CrewList = () => {
             crewType={crew.crewType}
             crewGoal={crew.crewGoal}
             crewSize={crew.crewSize}
+            crewProfileImage={crew.crewProfileImage}
           />
         ))}
       </div>
