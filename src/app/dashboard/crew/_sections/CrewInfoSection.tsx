@@ -8,7 +8,7 @@ import { Crew } from "@/app/types/crew";
 import { toast } from "sonner";
 
 interface CrewInfoSectionProps {
-  crewId: string;
+  crewId: number;
 }
 
 const CrewInfoSection = ({ crewId }: CrewInfoSectionProps) => {

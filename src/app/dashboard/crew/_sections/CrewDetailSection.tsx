@@ -5,7 +5,7 @@ import CrewDetailMenu from "../_components/CrewDetailMenu";
 import CrewInfoSection from "./CrewInfoSection";
 
 interface CrewDetailSectionProps {
-  crewId: string;
+  crewId: number;
 }
 
 const CrewDetailSection = ({ crewId }: CrewDetailSectionProps) => {

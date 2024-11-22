@@ -9,8 +9,8 @@ export default function CrewPage() {
   const { crewId } = useParams();
   return (
     <main className="w-full flex flex-row h-screen overflow-hidden">
-      <CrewSection crewId={crewId as string} />
-      <CrewRightBar />
+      <CrewSection crewId={parseInt(crewId as string)} />
+      <CrewRightBar crewId={parseInt(crewId as string)} />
     </main>
   );
 }
