@@ -1,56 +1,65 @@
-// app/api/users/register/route.ts
 import { NextResponse, NextRequest } from "next/server";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../../../../firebaseConfig";
 
 export async function POST(request: NextRequest) {
-  const BASE_URL = `${process.env.BASE_URL}`;
-  const apiUrl = `${BASE_URL}/users/register`;
-
   try {
-    // 클라이언트 요청에서 필요한 데이터 추출
-    const requestData = await request.json();
-    const {
+    // `multipart/form-data`로 전달된 데이터 파싱
+    const formData = await request.formData();
+
+    // 데이터 추출 및 검증
+    const userEmail = formData.get("userEmail") as string | null;
+    const userPassword = formData.get("userPassword") as string | null;
+    const userName = formData.get("userName") as string | null;
+    const userNickname = formData.get("userNickname") as string | null;
+    const userGender = formData.get("userGender") as string | null;
+    const userBirth = formData.get("userBirth") as string | null;
+    const userAddress = formData.get("userAddress") as string | null;
+    const userGoal = formData.get("userGoal") as string | null;
+    const userPreference = formData.get("userPreference") as string | null; // 이미 문자열로 받아짐
+    const profileImage = formData.get("profileImage") as File | null;
+
+    if (!userEmail || !userPassword || !userName || !userNickname || !userGender) {
+      return NextResponse.json({ error: "필수 필드가 누락되었습니다." }, { status: 400 });
+    }
+
+    // 프로필 이미지 업로드 처리
+    let profileImageUrl = null;
+    if (profileImage) {
+      const fileName = `${Date.now()}_${profileImage.name}`;
+      const storageRef = ref(storage, `crews/${fileName}`);
+
+      const buffer = await profileImage.arrayBuffer();
+      await uploadBytes(storageRef, new Uint8Array(buffer));
+
+      profileImageUrl = await getDownloadURL(storageRef);
+    }
+
+    // 유효성 검증 후 데이터 구성
+    const formattedBirth = userBirth ? userBirth.replace(/-/g, "") : null;
+    const currentDate = new Date().toISOString();
+
+    const body = {
       userEmail,
       userPassword,
       userName,
       userNickname,
-      userGender,
-      userBirth,
+      userGender: parseInt(userGender, 10),
+      userBirth: formattedBirth,
       userAddress,
       userGoal,
-      userPreference,
-    } = requestData;
-
-    // userBirth 변환 (YYYY-MM-DD -> YYYYMMDD)
-    const formattedBirth =
-      userBirth && typeof userBirth === "string"
-        ? userBirth.replace(/-/g, "") // 하이픈(-) 제거
-        : null;
-
-    const currentDate = new Date()
-      .toLocaleString("sv-SE", { timeZone: "UTC" })
-      .replace(" ", "T");
-
-    const body = {
-      userEmail: userEmail, // 정상적으로 받은 데이터를 매핑
-      userPassword: userPassword,
-      userName: userName,
-      userNickname: userNickname,
-      userGender: userGender,
-      userBirth: formattedBirth,
-      userAddress: userAddress,
-      userGoal: userGoal,
-      userPreference: userPreference,
-      userCreatedDt: currentDate, // 현재 시각
-      userUpdatedDt: currentDate, // 현재 시각
-      userOauthId: null, // 기본값
-      userProfile: null, // 기본값
-      userEmailIsAuthenticated: 1, // 기본값
+      userPreference: userPreference || "", // 이미 쉼표로 구분된 문자열로 보냄
+      userCreatedDt: currentDate,
+      userUpdatedDt: currentDate,
+      userOauthId: null,
+      userProfile: profileImageUrl,
+      userEmailIsAuthenticated: 1,
     };
 
-    console.log("출력: " + JSON.stringify(body));
+    console.log("최종 전송 데이터:", body);
 
-    // API 요청
-    const response = await fetch(apiUrl, {
+    // 백엔드 API 호출
+    const response = await fetch(`${process.env.BASE_URL}/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -58,28 +67,17 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    const responseData = await response.json();
-
-    if (responseData.result === false) {
-      return NextResponse.json(
-        { error: responseData.message || "회원가입 실패" },
-        { status: 400 }
-      );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return NextResponse.json({ error: errorData.message || "회원가입 실패" }, { status: 400 });
     }
 
-    // 서버 응답에서 결과 확인 및 에러 처리
     return NextResponse.json(
-      {
-        success: true,
-        message: "회원가입이 성공했습니다.",
-
-      },
+      { success: true, message: "회원가입이 성공했습니다." },
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json(
-      { error: `회원가입 중 오류 발생: ${error.message}` },
-      { status: 500 }
-    );
+    const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

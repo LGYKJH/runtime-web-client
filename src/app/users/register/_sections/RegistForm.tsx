@@ -9,27 +9,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import InputField from "../_components/InputField";
 import Address from "@/components/ui/address";
+
+import InputField from "../_components/InputField";
 import StepNavigation from "../_components/StepNavigation";
+
 import { ErrorMessage, RegisterFormType } from "@/lib/types";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import ProfileImageUploader from "../_components/ProfileImageUploader";
 
-// 스포츠 항목 리스트
-const sports = [
-  "로드 런",
-  "트레일 런",
-  "하프 마라톤",
-  "마라톤",
-  "리커버리 런",
-  "조깅",
-];
+const sports = ["로드 런", "트레일 런", "하프 마라톤", "마라톤", "리커버리 런", "조깅"];
 
 const STEPS = [
   ["userEmail", "userPassword", "userName"],
   ["userNickname", "userGender", "userBirth"],
   ["userAddress", "userGoal", "userPreference"],
+  ["profileImage"], // 프로필 이미지 전용 단계
 ];
 
 const LABELS: { [key: string]: string } = {
@@ -42,6 +38,7 @@ const LABELS: { [key: string]: string } = {
   userAddress: "주소",
   userGoal: "목표",
   userPreference: "선호 유형",
+  profileImage: "프로필 이미지",
 };
 
 export default function RegisterForm() {
@@ -56,6 +53,7 @@ export default function RegisterForm() {
     userAddress: "",
     userGoal: "",
     userPreference: [],
+    profileImage: null, // 프로필 이미지 상태 추가
   });
 
   const [errors, setErrors] = useState<ErrorMessage>({});
@@ -73,15 +71,12 @@ export default function RegisterForm() {
     if (id === "userEmail") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        userEmail: value.includes("@")
-          ? ""
-          : "유효한 이메일 주소를 입력하세요.",
+        userEmail: value.includes("@") ? "" : "유효한 이메일 주소를 입력하세요.",
       }));
     } else if (id === "userPassword") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        userPassword:
-          value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
+        userPassword: value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
       }));
     } else if (id === "userBirth") {
       setErrors((prevErrors) => ({
@@ -96,7 +91,18 @@ export default function RegisterForm() {
     }
   };
 
-  // 주소 daum API
+  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      userGender: Number(value), // 라디오 버튼 값 업데이트
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      userGender: "", // 에러 초기화
+    }));
+  };
+
   const handleAddressChange = (addressData: {
     postcode: string;
     address: string;
@@ -107,22 +113,12 @@ export default function RegisterForm() {
       ...prevData,
       userAddress: fullAddress,
     }));
-  };
-
-  // 라디오 박스
-  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      userGender: Number(value), // 라디오 버튼 값 저장 (0: 남성, 1: 여성)
-    }));
     setErrors((prevErrors) => ({
       ...prevErrors,
-      userGender: "",
+      userAddress: "",
     }));
   };
 
-  // Checkbox 변경 핸들러
   const handlePreferenceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
     setFormData((prevData) => {
@@ -135,20 +131,31 @@ export default function RegisterForm() {
         userPreference: updatedPreferences,
       };
     });
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      userPreference: "",
+    }));
+  };
+
+  const handleImageChange = (file: File | null) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      profileImage: file,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      profileImage: file ? "" : "프로필 이미지를 업로드해주세요.",
+    }));
   };
 
   const handleNext = () => {
     const currentStepFields = STEPS[step];
     const newErrors: ErrorMessage = {};
 
-    // 현재 단계에서 누락된 필드 확인
     currentStepFields.forEach((key) => {
       if (key === "userGender" && formData.userGender === null) {
         newErrors[key] = `${LABELS[key]}을(를) 선택하세요.`;
-      } else if (
-        key === "userPreference" &&
-        formData.userPreference.length === 0
-      ) {
+      } else if (key === "userPreference" && formData.userPreference.length === 0) {
         newErrors[key] = `${LABELS[key]}을(를) 선택하세요.`;
       } else if (!formData[key as keyof RegisterFormType]) {
         newErrors[key] = `${LABELS[key]}을(를) 입력하세요.`;
@@ -160,7 +167,7 @@ export default function RegisterForm() {
       return;
     }
 
-    setStep((prevStep) => prevStep + 1);
+    setStep((prevStep) => Math.min(prevStep + 1, STEPS.length - 1));
   };
 
   const handlePrev = () => {
@@ -170,62 +177,51 @@ export default function RegisterForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-
-    // 이미 제출 중이라면 함수 종료
     if (isSubmitting) return;
 
-    setIsSubmitting(true); // 제출 중 상태 설정
-
-    const newErrors: ErrorMessage = {};
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key as keyof RegisterFormType]) {
-        newErrors[key] = `${LABELS[key]}을(를) 입력하세요.`;
-      }
-    });
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setIsSubmitting(false); // 에러가 있으면 제출 중 상태 해제
-      return;
-    }
+    setIsSubmitting(true);
 
     try {
-      // `userPreference` 배열을 문자열로 변환
-      const payload = {
-        ...formData,
-        userPreference: formData.userPreference.join(","),
-      };
+      // Create FormData instance
+      const formPayload = new FormData();
+      formPayload.append("userEmail", formData.userEmail);
+      formPayload.append("userPassword", formData.userPassword);
+      formPayload.append("userName", formData.userName);
+      formPayload.append("userNickname", formData.userNickname);
+      formPayload.append("userGender", formData.userGender.toString());
+      formPayload.append("userBirth", formData.userBirth);
+      formPayload.append("userAddress", formData.userAddress);
+      formPayload.append("userGoal", formData.userGoal);
+      formPayload.append("userPreference", formData.userPreference.join(","));
+
+      // Append file only if profileImage exists
+      if (formData.profileImage) {
+        formPayload.append("profileImage", formData.profileImage);
+      }
 
       const response = await fetch("/api/user/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: formPayload, // No need for headers with FormData
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("회원가입 실패:", errorData.error);
-        alert(errorData.error || "알 수 없는 오류가 발생했습니다.");
+        toast.error(`${errorData.error} 하이` || "알 수 없는 오류가 발생했습니다.");
         return;
       }
 
-      // 성공 처리
       const data = await response.json();
-
       toast.success(data.message);
       router.push("/users/login");
     } catch (error) {
-      console.error("예외 발생:", error);
-      toast("서버와의 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-    }finally {
-      setIsSubmitting(false); // 제출 완료 후 상태 해제
+      toast.error("서버와의 통신 중 오류가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <section className="flex items-center justify-center min-h-screen">
       <Card className="w-[400px]">
         <CardHeader>
           <CardTitle>회원가입</CardTitle>
@@ -237,12 +233,55 @@ export default function RegisterForm() {
           <form>
             <div className="grid w-full items-center gap-4">
               {STEPS[step].map((key) => {
+                if (key === "userPassword") {
+                  return (
+                    <div key={key} className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                      <input
+                        type="password" // password 타입으로 수정
+                        id={key}
+                        value={formData[key] || ""}
+                        onChange={handleChange}
+                        className="border rounded-md p-2"
+                      />
+                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                    </div>
+                  );
+                }
+
+                if (key === "userBirth") {
+                  return (
+                    <div key={key} className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                      <input
+                        type="date"
+                        id={key}
+                        value={formData[key] || ""}
+                        onChange={handleChange}
+                        className="border rounded-md p-2"
+                      />
+                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                    </div>
+                  );
+                }
+
+                if (key === "profileImage") {
+                  return (
+                    <div key={key} className="w-full flex flex-col justify-items-start gap-y-2">
+                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                      <ProfileImageUploader
+                        file={formData.profileImage}
+                        setFile={handleImageChange}
+                      />
+                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                    </div>
+                  );
+                }
+
                 if (key === "userGender") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">
-                        {LABELS[key]}
-                      </label>
+                      <label className="text-sm font-medium">{LABELS[key]}</label>
                       <div className="flex items-center gap-4">
                         <label className="flex items-center gap-1">
                           <input
@@ -266,29 +305,7 @@ export default function RegisterForm() {
                         </label>
                       </div>
                       {errors.userGender && (
-                        <p className="text-red-500 text-sm">
-                          {errors.userGender}
-                        </p>
-                      )}
-                    </div>
-                  );
-                }
-
-                if (key === "userBirth") {
-                  return (
-                    <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">
-                        {LABELS[key]}
-                      </label>
-                      <input
-                        type="date"
-                        id={key}
-                        value={formData[key] || ""}
-                        onChange={handleChange}
-                        className="border rounded-md p-2"
-                      />
-                      {errors[key] && (
-                        <p className="text-red-500 text-sm">{errors[key]}</p>
+                        <p className="text-red-500 text-sm">{errors.userGender}</p>
                       )}
                     </div>
                   );
@@ -297,13 +314,9 @@ export default function RegisterForm() {
                 if (key === "userAddress") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">
-                        {LABELS[key]}
-                      </label>
+                      <label className="text-sm font-medium">{LABELS[key]}</label>
                       <Address onAddressChange={handleAddressChange} />
-                      {errors[key] && (
-                        <p className="text-red-500 text-sm">{errors[key]}</p>
-                      )}
+                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
                     </div>
                   );
                 }
@@ -311,15 +324,10 @@ export default function RegisterForm() {
                 if (key === "userPreference") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">
-                        {LABELS[key]}
-                      </label>
+                      <label className="text-sm font-medium">{LABELS[key]}</label>
                       <div className="flex flex-col gap-1">
                         {sports.map((sport) => (
-                          <label
-                            key={sport}
-                            className="flex items-center gap-2"
-                          >
+                          <label key={sport} className="flex items-center gap-2">
                             <input
                               type="checkbox"
                               value={sport}
@@ -330,9 +338,7 @@ export default function RegisterForm() {
                           </label>
                         ))}
                       </div>
-                      {errors[key] && (
-                        <p className="text-red-500 text-sm">{errors[key]}</p>
-                      )}
+                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
                     </div>
                   );
                 }
@@ -362,6 +368,6 @@ export default function RegisterForm() {
         </CardContent>
         <CardFooter className="flex justify-between"></CardFooter>
       </Card>
-    </div>
+    </section>
   );
 }
