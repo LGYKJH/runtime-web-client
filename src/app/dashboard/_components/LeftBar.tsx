@@ -47,14 +47,20 @@ const LeftBar = () => {
               src={user?.userProfile || "https://github.com/shadcn.png"}
               className="w-6 h-6"
             />
-            <AvatarFallback>{user?.userName?.charAt(0) || "?"}</AvatarFallback>
+            <AvatarFallback>{user?.userNickname?.charAt(0) || "?"}</AvatarFallback>
           </Avatar>
-          <span className="font-normal text-sm">{user?.userName || "이름 없음"}</span>
+          <span className="font-normal text-sm">{user?.userNickname || "이름 없음"}</span>
         </div>
       </SidebarHeader>
       <SidebarContent className="pt-6 px-8">
-        <Label className="font-normal py-1.5 text-secondary">관리 탭</Label>
-        <Label className="font-normal py-1.5 text-secondary">주간 계획</Label>
+        <div className="flex flex-col">
+          <Label className="font-normal py-1.5 text-secondary">관리 탭</Label>
+          <p className="text-sm text-muted-foreground">{user?.userGoal || "내용 없음"}</p>
+        </div>
+        <div>
+          <Label className="font-normal py-1.5 text-secondary">주간 계획</Label>
+          <p className="text-sm text-muted-foreground">{user?.userGoal || "내용 없음"}</p>
+        </div>
         <Label className="font-normal py-1.5 text-secondary">목표</Label>
         <Label className="font-normal py-1.5 text-secondary">월간 캘린더</Label>
       </SidebarContent>
