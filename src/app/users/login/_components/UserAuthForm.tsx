@@ -35,15 +35,12 @@ const UserAuthForm = () => {
     if (id === "email") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        emailError: value.includes("@")
-          ? ""
-          : "유효한 이메일 주소를 입력하세요.",
+        emailError: value.includes("@") ? "" : "유효한 이메일 주소를 입력하세요.",
       }));
     } else if (id === "password") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        passwordError:
-          value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
+        passwordError: value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
       }));
     }
   };
@@ -70,9 +67,9 @@ const UserAuthForm = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.log(data || "로그인에 실패했습니다.");
+        toast.error(data.message || "로그인에 실패했습니다.");
       } else {
-        toast.success(data.data.message); 
+        toast.success(data.message);
 
         setTimeout(() => {
           router.push("/dashboard");
@@ -129,7 +126,7 @@ const UserAuthForm = () => {
         </Button>
 
         <a href="/users/register" className="text-sm text-blue-500 hover:underline mt-2">
-          회원가입 
+          회원가입
         </a>
       </form>
 
