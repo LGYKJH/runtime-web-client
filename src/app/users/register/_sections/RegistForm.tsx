@@ -14,6 +14,7 @@ import Address from "@/components/ui/address";
 import StepNavigation from "../_components/StepNavigation";
 import { ErrorMessage, RegisterFormType } from "@/lib/types";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // 스포츠 항목 리스트
 const sports = [
@@ -44,6 +45,7 @@ const LABELS: { [key: string]: string } = {
 };
 
 export default function RegisterForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState<RegisterFormType>({
     userEmail: "",
     userPassword: "",
@@ -165,7 +167,15 @@ export default function RegisterForm() {
     setStep((prevStep) => Math.max(prevStep - 1, 0));
   };
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async () => {
+
+    // 이미 제출 중이라면 함수 종료
+    if (isSubmitting) return;
+
+    setIsSubmitting(true); // 제출 중 상태 설정
+
     const newErrors: ErrorMessage = {};
     Object.keys(formData).forEach((key) => {
       if (!formData[key as keyof RegisterFormType]) {
@@ -175,6 +185,7 @@ export default function RegisterForm() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setIsSubmitting(false); // 에러가 있으면 제출 중 상태 해제
       return;
     }
 
@@ -202,16 +213,14 @@ export default function RegisterForm() {
 
       // 성공 처리
       const data = await response.json();
-      console.log("회원가입 성공:", data.message);
 
-      // 리다이렉션 처리
-      if (data.redirectTo) {
-        toast(data.message);
-        window.location.href = data.redirectTo;
-      }
+      toast.success(data.message);
+      router.push("/users/login");
     } catch (error) {
       console.error("예외 발생:", error);
       toast("서버와의 통신 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }finally {
+      setIsSubmitting(false); // 제출 완료 후 상태 해제
     }
   };
 
@@ -346,6 +355,7 @@ export default function RegisterForm() {
                 onPrev={handlePrev}
                 onNext={handleNext}
                 onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
               />
             </div>
           </form>

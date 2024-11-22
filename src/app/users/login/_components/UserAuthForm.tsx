@@ -72,7 +72,8 @@ const UserAuthForm = () => {
       if (!response.ok) {
         console.log(data || "로그인에 실패했습니다.");
       } else {
-        toast.success(data.data.message);
+        toast.success(data.data.message); 
+
         setTimeout(() => {
           router.push("/dashboard");
         }, 500);

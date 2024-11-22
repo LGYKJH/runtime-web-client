@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: "회원가입이 성공했습니다.",
-        redirectTo: "/users/login",
+
       },
       { status: 200 }
     );
