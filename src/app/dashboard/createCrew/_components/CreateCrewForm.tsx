@@ -1,4 +1,6 @@
 import React, { useState, Dispatch, SetStateAction, useCallback } from "react";
+
+import { Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -13,10 +15,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import Map from "./Map";
-import { Districts, districts, districtCoordinates } from "@/lib/districts";
-import Image from "next/image";
 import ImageUploader from "@/app/_components/ImageUploader";
+import { Districts, districts, districtCoordinates } from "@/lib/districts";
 
 interface CreateCrewFormProps {
   crewName: string;
@@ -27,6 +29,7 @@ interface CreateCrewFormProps {
   setCrewProfile: Dispatch<SetStateAction<File | null>>;
   place: string;
   setPlace: Dispatch<SetStateAction<string>>;
+  handleCreateAIDesc: () => Promise<void>;
 }
 
 const CreateCrewForm = ({
@@ -38,6 +41,7 @@ const CreateCrewForm = ({
   setCrewProfile,
   place,
   setPlace,
+  handleCreateAIDesc,
 }: CreateCrewFormProps) => {
   const [selectedDistrict, setSelectedDistrict] = useState<Districts | "">("");
 
@@ -130,9 +134,19 @@ const CreateCrewForm = ({
             />
           </div>
           <div className="w-full flex-1 flex flex-col gap-y-2">
-            <Label htmlFor="goal" className="text-secondary font-normal">
-              크루 소개
-            </Label>
+            <div className="w-full flex flex-row justify-between items-center pr-6">
+              <Label htmlFor="goal" className="text-secondary font-normal">
+                크루 소개
+              </Label>
+              <Button
+                variant="link"
+                size="icon"
+                className="h-0 cursor-pointer"
+                onClick={handleCreateAIDesc}
+              >
+                <Label className="text-secondary font-normal">AI 자동 완성</Label>
+              </Button>
+            </div>
             <Textarea
               placeholder="크루 소개를 적어주세요..."
               id="goal"

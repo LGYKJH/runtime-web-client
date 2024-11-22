@@ -11,6 +11,7 @@ interface CreateCrewSectionProps {
   setCrewProfile: Dispatch<SetStateAction<File | null>>;
   place: string;
   setPlace: Dispatch<SetStateAction<string>>;
+  handleCreateAIDesc: () => Promise<void>;
 }
 
 const CreateCrewSection = ({
@@ -22,6 +23,7 @@ const CreateCrewSection = ({
   setCrewProfile,
   place,
   setPlace,
+  handleCreateAIDesc,
 }: CreateCrewSectionProps) => {
   return (
     <div className="w-full h-full flex-1 flex flex-col justify-start items-center overflow-hidden pb-16">
@@ -35,6 +37,7 @@ const CreateCrewSection = ({
         setCrewProfile={setCrewProfile}
         place={place}
         setPlace={setPlace}
+        handleCreateAIDesc={handleCreateAIDesc}
       />
     </div>
   );

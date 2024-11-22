@@ -99,6 +99,43 @@ export default function CreateCrewPage() {
     }
   };
 
+  const handleCreateAIDesc = async () => {
+    try {
+      if (!crewName || !place || !crewSize || !crewProfile) {
+        toast.warning("AI 소개 작성에 필요한 정보를 모두 입력해주세요!");
+        return;
+      }
+
+      const requestBody = {
+        crewName,
+        place,
+        days,
+        types,
+        crewSize,
+      };
+
+      const response = await fetch("/api/crew/createAIDesc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("생성 성공:", data);
+        toast.success("성공적으로 AI 크루 소개가 생성되었습니다.");
+        setCrewGoal(data.post);
+      } else {
+        const error = await response.json();
+        toast.error(`생성 실패: ${error.message}`);
+      }
+    } catch (error) {
+      toast.error("요청 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <main className="w-full flex flex-row h-screen overflow-hidden">
       <CreateCrewSection
@@ -110,6 +147,7 @@ export default function CreateCrewPage() {
         setCrewGoal={setCrewGoal}
         place={place}
         setPlace={setPlace}
+        handleCreateAIDesc={handleCreateAIDesc}
       />
       <CreateRightBar
         days={days}
