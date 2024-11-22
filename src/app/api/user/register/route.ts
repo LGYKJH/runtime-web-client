@@ -1,8 +1,9 @@
 // app/api/users/register/route.ts
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const BASE_URL = `${process.env.BASE_URL}`;
+  const apiUrl = `${BASE_URL}/users/register`;
 
   try {
     // 클라이언트 요청에서 필요한 데이터 추출
@@ -24,9 +25,6 @@ export async function POST(request: Request) {
       userBirth && typeof userBirth === "string"
         ? userBirth.replace(/-/g, "") // 하이픈(-) 제거
         : null;
-
-    // 서버에 전달할 회원가입 데이터 구성
-    const apiUrl = `${BASE_URL}/users/register`;
 
     const currentDate = new Date()
       .toLocaleString("sv-SE", { timeZone: "UTC" })
@@ -60,39 +58,27 @@ export async function POST(request: Request) {
       body: JSON.stringify(body),
     });
 
-    const contentType = response.headers.get("Content-Type");
-    let responseData;
+    const responseData = await response.json();
 
-    if (contentType && contentType.includes("application/json")) {
-      responseData = await response.json();
-    } else {
-      responseData = await response.text();
-    }
-
-    // 서버 응답에서 결과 확인 및 에러 처리
-    if (responseData && responseData.result === false) {
-      const errorCode = responseData.error_code || "Unknown error code";
-      const errorMessage = responseData.message || "Unknown error occurred";
-
+    if (responseData.result === false) {
       return NextResponse.json(
-        { error: `Error: ${errorMessage} (Code: ${errorCode})` },
+        { error: responseData.message || "회원가입 실패" },
         { status: 400 }
       );
     }
 
-    /*  return NextResponse.json(
-      { message: "회원가입이 성공했습니다.", data: responseData },
-      { status: 200 }
-    ); */
-    // 회원가입 성공 -> 리다이렉션
-    return NextResponse.redirect(new URL("/users/login", request.url));
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "알 수 없는 오류가 발생했습니다.";
+    // 서버 응답에서 결과 확인 및 에러 처리
     return NextResponse.json(
-      { error: "회원가입 중 오류가 발생했습니다: " + errorMessage },
+      {
+        success: true,
+        message: "회원가입이 성공했습니다.",
+        redirectTo: "/users/login",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: `회원가입 중 오류 발생: ${error.message}` },
       { status: 500 }
     );
   }
