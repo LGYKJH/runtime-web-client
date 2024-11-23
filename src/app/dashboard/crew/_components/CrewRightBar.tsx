@@ -16,23 +16,40 @@ interface CrewRightBarProps {
 const CrewRightBar = ({ crewId }: CrewRightBarProps) => {
   const user = useUserStore((state) => state.user);
   const [crewMemberInfo, setCrewMemberInfo] = useState<CrewMember[]>([]);
+  const [isAlreadyMember, setIsAlreadyMember] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchCrewMemberInfo = async () => {
       try {
-        const response = await fetch(`/api/crew/getCrewMember/${crewId}`);
+        const response = await fetch(`/api/crew/getCrewMember/${crewId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
 
-        const data: CrewMember[] = await response.json();
-        setCrewMemberInfo(data);
+        const data = await response.json();
+        const crewMemberList: CrewMember[] = data.combinedData;
+        setCrewMemberInfo(crewMemberList);
+        if (data.isUserInCrew || data.isUserInWaiting) {
+          setIsAlreadyMember(true);
+        }
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "An error occurred");
+        toast.error(
+          error instanceof Error ? error.message : "An error occurred"
+        );
       }
     };
-    fetchCrewMemberInfo();
-  }, [crewId]);
+
+    if (user && user.userId) {
+      document.cookie = `user_id=${user.userId}; Path=/; SameSite=Lax`;
+      fetchCrewMemberInfo();
+    }
+  }, [crewId, user]);
 
   const getRoleLabel = (role: string) => {
     switch (role) {
@@ -96,7 +113,9 @@ const CrewRightBar = ({ crewId }: CrewRightBarProps) => {
                     <AvatarFallback>{member.userName[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-sm">{member.userName}</span>
+                    <span className="font-semibold text-sm">
+                      {member.userName}
+                    </span>
                     <span className={`text-xs font-medium ${roleInfo.color}`}>
                       {roleInfo.label}
                     </span>
@@ -109,11 +128,13 @@ const CrewRightBar = ({ crewId }: CrewRightBarProps) => {
           )}
         </div>
       </div>
-      <div className="absolute bottom-[56px] w-full flex flex-row justify-center items-center">
-        <Button onClick={handleJoinCrewButton} className="w-[88%]">
-          크루 참가하기
-        </Button>
-      </div>
+      {!isAlreadyMember && (
+        <div className="absolute bottom-[56px] w-full flex flex-row justify-center items-center">
+          <Button onClick={handleJoinCrewButton} className="w-[88%]">
+            크루 참가하기
+          </Button>
+        </div>
+      )}
     </section>
   );
 };
