@@ -1,7 +1,7 @@
 "use client";
 
-import React, {  useEffect, useState } from "react";
-import Calendar from "@/app/dashdash/_components/Calendar";
+import React, { useEffect, useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
 import { CrewPlans } from "@/app/types/crewPlans";
 import { toast } from "sonner";
 
@@ -20,17 +20,15 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
-        
+
         const data: CrewPlans[] = await response.json();
         setCrewPlans(data);
       } catch (error) {
         toast.error(error.message);
       }
-
     };
 
     fetchCrewCalendar();
-
   }, []);
 
   const handleDateSelect = (date: Date) => {
@@ -63,7 +61,9 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-gray-500">선택한 날짜에 일정이 없습니다.</p>
+          <p className="text-sm text-gray-500">
+            선택한 날짜에 일정이 없습니다.
+          </p>
         )}
       </div>
     </div>
