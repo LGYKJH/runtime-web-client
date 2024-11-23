@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
+import CrewCalendar from "../../_components/CrewCalendar";
 import { CrewPlans } from "@/app/types/crewPlans";
 import { toast } from "sonner";
 
@@ -16,7 +16,7 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
   useEffect(() => {
     const fetchCrewCalendar = async () => {
       try {
-        const response = await fetch("/api/crew/detail");
+        const response = await fetch(`/api/crew/detail/${crewId}`);
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
@@ -29,9 +29,15 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
     };
 
     fetchCrewCalendar();
-  }, []);
+  }, [crewId]);
 
-  const handleDateSelect = (date: Date) => {
+  const handleDateSelect = (date: Date | null) => {
+    // 날짜가 선택되지 않았을 경우 초기화
+    if (!date) {
+      setSelectedDatePlans([]);
+      return;
+    }
+
     // 날짜에 해당하는 계획 필터링
     const selectedPlans = crewPlans.filter((plan) => {
       const planStart = new Date(plan.crewPlanStartDt);
@@ -48,8 +54,8 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
   };
 
   return (
-    <div className="w-full">
-      <Calendar onSelectDate={handleDateSelect} />
+    <div className="w-full flex flex-col items-center gap-y-5 px-10">
+      <CrewCalendar onSelectDate={handleDateSelect} />
       <div className="mt-4">
         <h2 className="text-lg font-semibold">선택한 날짜의 크루 일정</h2>
         {selectedDatePlans.length > 0 ? (
