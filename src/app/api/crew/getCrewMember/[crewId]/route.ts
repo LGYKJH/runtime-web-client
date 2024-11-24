@@ -67,6 +67,8 @@ export async function GET(
     const membersData: CrewMember[] = await membersResponse.json();
     const waitingData: CrewMember[] = await waitingResponse.json();
 
+    const currentMemberNumber = membersData.length;
+
     // 2. userId가 있는 멤버 찾기
     const userMember = membersData.find(
       (member) => member.userId === parseInt(userId, 10)
@@ -96,9 +98,6 @@ export async function GET(
     if (userRole == 1) {
       // 리더: 대기자와 멤버 모두 반환
       combinedData = [...waitingData, ...membersData];
-    } else if (userRole == 2) {
-      // 멤버: 멤버 데이터만 반환
-      combinedData = membersData;
     } else if (userRole == 3) {
       // 대기자: 대기자 전체와 자신의 데이터만 반환
       combinedData = [
@@ -108,11 +107,7 @@ export async function GET(
         ...membersData,
       ];
     } else {
-      // 알 수 없는 역할: 오류 반환
-      return NextResponse.json(
-        { error: "유효하지 않은 사용자 역할입니다." },
-        { status: 403 }
-      );
+      combinedData = membersData;
     }
 
     // 4. 응답 반환
@@ -121,6 +116,7 @@ export async function GET(
       isUserInCrew,
       isUserInWaiting,
       userRole,
+      currentMemberNumber,
     });
   } catch (error) {
     const errorMessage =

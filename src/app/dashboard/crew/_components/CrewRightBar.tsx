@@ -11,9 +11,15 @@ import CrewMemberCard from "./CrewMemberCard";
 
 interface CrewRightBarProps {
   crewId: number;
+  currentMemberNumber: number;
+  setCurrentMemberNumber: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CrewRightBar = ({ crewId }: CrewRightBarProps) => {
+const CrewRightBar = ({
+  crewId,
+  currentMemberNumber,
+  setCurrentMemberNumber,
+}: CrewRightBarProps) => {
   const user = useUserStore((state) => state.user);
   const [crewMemberInfo, setCrewMemberInfo] = useState<CrewMember[]>([]);
   const [isAlreadyMember, setIsAlreadyMember] = useState<boolean>(false);
@@ -35,6 +41,7 @@ const CrewRightBar = ({ crewId }: CrewRightBarProps) => {
         const data = await response.json();
         const crewMemberList: CrewMember[] = data.combinedData;
         setCrewMemberInfo(crewMemberList);
+        setCurrentMemberNumber(data.currentMemberNumber);
         if (data.isUserInCrew || data.isUserInWaiting) {
           setIsAlreadyMember(true);
         }
@@ -81,7 +88,12 @@ const CrewRightBar = ({ crewId }: CrewRightBarProps) => {
     <section className="relative min-w-[320px] max-w-[320px] flex flex-col justify-start items-center gap-y-4 px-4 py-4 border-l-[0.5px] border-l-sidebar-border">
       <div className="w-full px-1 pt-1.5 pb-2 gap-y-1 flex flex-col justify-start items-start">
         <h4 className="pb-2">크루 멤버</h4>
-        <Label className="font-normal py-1.5 text-secondary">멤버 목록</Label>
+        <div className="w-full flex flex-row justify-between items-center">
+          <Label className="font-normal py-1.5 text-secondary">멤버 목록</Label>
+          <Label className="font-normal py-1.5 text-secondary text-xs">
+            {currentMemberNumber}
+          </Label>
+        </div>
         <div className="pt-0 pb-4 flex flex-col justify-start items-start gap-1.5 w-full">
           {crewMemberInfo.length > 0 ? (
             crewMemberInfo.map((member) => (

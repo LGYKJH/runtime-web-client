@@ -1,21 +1,16 @@
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { toast } from "sonner";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { Ellipsis } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+
+import MemberOptionDialog from "./MemberOptionDialog";
 
 interface CrewMemberCardProps {
   crewMemberId: number;
@@ -24,51 +19,94 @@ interface CrewMemberCardProps {
   crewMemberRole: string;
 }
 
-const AcceptMenu = () => {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          className="w-full flex flex-row justify-start items-center py-1.5 px-2 font-normal"
-          variant="ghost"
-        >
-          크루 승인
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogTitle className="text-primary font-medium text-base">
-          크루 멤버 신청을 수락하시겠습니까?
-        </DialogTitle>
-        <DialogFooter>
-          <Button size="sm" variant="default">
-            수락
-          </Button>
-          <Button size="sm" variant="outline">
-            거절
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
 const CrewMemberCard = ({
   crewMemberId,
   userName,
   userProfile,
   crewMemberRole,
 }: CrewMemberCardProps) => {
+  const handleMemberAcceptButton = async () => {
+    try {
+      const requestBody = {
+        crewMemberId: crewMemberId,
+      };
+
+      const response = await fetch("/api/crew/acceptCrewMember", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        toast.success("멤버 수락이 완료되었습니다!");
+      } else {
+        const error = await response.json();
+        toast.error(error.message);
+      }
+    } catch (error) {
+      toast.error("요청 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleMemberRejectButton = async () => {
+    try {
+      const requestBody = {
+        crewMemberId: crewMemberId,
+      };
+
+      const response = await fetch("/api/crew/rejectCrewMember", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        toast.success("멤버를 성공적으로 내보냈습니다.");
+      } else {
+        const error = await response.json();
+        toast.error(error.message);
+      }
+    } catch (error) {
+      toast.error("요청 중 오류가 발생했습니다.");
+    }
+  };
+
   const getRoleLabel = (role: string) => {
     switch (role) {
       case "1":
         return { label: "크루장", color: "text-blue-500" };
       case "2":
-        return { label: "크루원", color: "text-zinc-400" };
+        return {
+          label: "크루원",
+          color: "text-zinc-400",
+          rejectButton: (
+            <MemberOptionDialog
+              triggerText="크루원 내보내기"
+              titleText="크루원을 정말 내보내시겠습니까?"
+              okText="확인"
+              cancelText="취소"
+              okFunction={handleMemberRejectButton}
+            />
+          ),
+        };
       case "3":
         return {
           label: "대기자",
           color: "text-yellow-500",
-          acceptButton: <AcceptMenu />, // 컴포넌트를 직접 JSX로 반환
+          acceptButton: (
+            <MemberOptionDialog
+              triggerText="크루 승인"
+              titleText="크루 멤버 신청을 수락하시겠습니까?"
+              okText="수락"
+              cancelText="거절"
+              okFunction={handleMemberAcceptButton}
+              cancelFunction={handleMemberRejectButton}
+            />
+          ),
         };
       default:
         return { label: "알 수 없음", color: "text-red-500" };
@@ -110,6 +148,7 @@ const CrewMemberCard = ({
           sideOffset={20}
         >
           {roleInfo.acceptButton && roleInfo.acceptButton}
+          {roleInfo.rejectButton && roleInfo.rejectButton}
         </PopoverContent>
       </Popover>
     </div>

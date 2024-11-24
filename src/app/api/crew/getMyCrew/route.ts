@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     // API 요청: 사용자가 속한 모든 크루 ID와 역할
-    const userCrewsResponse = await fetch(`${BASE_URL}/my/${userId}`, {
+    const userCrewsResponse = await fetch(`${BASE_URL}/myCrew/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
