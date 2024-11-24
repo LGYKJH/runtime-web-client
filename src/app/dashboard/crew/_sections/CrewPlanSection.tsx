@@ -22,6 +22,8 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
         }
 
         const data: CrewPlans[] = await response.json();
+
+        console.log(data);
         setCrewPlans(data);
       } catch (error) {
         toast.error(error.message);
@@ -55,7 +57,7 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
 
   return (
     <div className="w-full flex flex-col items-center gap-y-5 px-10">
-      <CrewCalendar onSelectDate={handleDateSelect} />
+      <CrewCalendar onSelectDate={handleDateSelect} crewId={crewId} />
       <div className="mt-4">
         <h2 className="text-lg font-semibold">선택한 날짜의 크루 일정</h2>
         {selectedDatePlans.length > 0 ? (

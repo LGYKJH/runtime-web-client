@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,7 +12,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function CrewCalendarEventForm({ selectedDate, onSubmit, onCancel }) {
+interface CrewCalendarEventFormProps {
+  selectedDate: Date;
+  crewId: number; // 추가된 crewId
+  onSubmit: () => void;
+  onCancel: () => void;
+}
+
+function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
     category: "",
     place: "",
@@ -27,11 +27,11 @@ function CrewCalendarEventForm({ selectedDate, onSubmit, onCancel }) {
     endTime: "",
   });
 
-  const handleChange = (name, value) => {
+  const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.category || !formData.place || !formData.startTime) {
       alert("필수 항목을 모두 입력해주세요.");
@@ -39,12 +39,22 @@ function CrewCalendarEventForm({ selectedDate, onSubmit, onCancel }) {
     }
 
     try {
+      // LocalDateTime 형식으로 변환
+      const formatToLocalDateTime = (date: Date, time: string) => {
+        return `${date.toISOString().split("T")[0]}T${time}:00`;
+      };
+
       const crewPlanData = {
-        crewPlanStartDt: `${selectedDate}T${formData.startTime}`, // 날짜 + 시작 시간 조합
-        crewPlanEndDt: formData.endTime
-          ? `${selectedDate}T${formData.endTime}`
-          : null, // 종료 시간 있을 경우
+        crewId,
         crewPlanContent: formData.category,
+        crewPlanStartDt: formatToLocalDateTime(
+          selectedDate,
+          formData.startTime
+        ),
+        crewPlanEndDt: formData.endTime
+          ? formatToLocalDateTime(selectedDate, formData.endTime)
+          : null,
+        crewPlanselectedDate: selectedDate.toISOString().split("T")[0],
         crewPlanPlace: formData.place,
         crewPlanIsRegular: formData.category === "Regular Meeting" ? 1 : 0,
       };
@@ -132,7 +142,7 @@ function CrewCalendarEventForm({ selectedDate, onSubmit, onCancel }) {
             <Button variant="ghost" onClick={onCancel}>
               취소
             </Button>
-            <Button type="submit">이벤트 추가</Button>
+            <Button type="submit">등록하기</Button>
           </div>
         </form>
       </CardContent>

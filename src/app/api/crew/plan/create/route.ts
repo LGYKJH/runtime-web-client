@@ -1,17 +1,30 @@
 import { NextResponse } from "next/server";
 
+// Helper function to format Date to 'YYYY-MM-DDTHH:mm:ss'
+const formatDateToLocalDateTime = (date) => {
+  const pad = (num) => String(num).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate()
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(
+    date.getSeconds()
+  )}`;
+};
+
 export async function POST(request: Request) {
   const BASE_URL = `${process.env.BASE_URL}/crews/plan/create`;
 
   try {
     const body = await request.json();
 
+    // body 내용을 console.log로 출력
+    console.log("Request body:", body);
+
     // Validate incoming data
     if (
-      !body.category ||
-      !body.place ||
-      !body.startTime ||
-      !body.selectedDate
+      !body.crewPlanContent || // 카테고리
+      !body.crewPlanPlace || // 장소
+      !body.crewPlanStartDt || // 시작 날짜+시간
+      body.crewPlanEndDt === undefined // 종료 날짜+시간 (null도 허용)
     ) {
       return NextResponse.json(
         { message: "필수 필드가 누락되었습니다." },
@@ -21,17 +34,18 @@ export async function POST(request: Request) {
 
     // Transform the data to match the Spring backend DTO
     const crewPlanData = {
-      crewPlanContent: body.category, // 카테고리 값을 콘텐츠로 사용
-      crewPlanPlace: body.place,
-      crewPlanStartDt: `${body.selectedDate}T${body.startTime}`,
-      crewPlanEndDt: body.endTime
-        ? `${body.selectedDate}T${body.endTime}`
-        : null,
-      crewPlanIsRegular: body.category === "Regular Meeting" ? 1 : 0,
-      crewPlanStatus: "ACTIVE", // 기본 상태를 ACTIVE로 설정
-      crewId: 1, // 예시: 특정 Crew ID를 하드코딩하거나 전달받을 수 있음
-      crewPlanCreatedDt: new Date().toISOString(),
+      crewId: body.crewId,
+      crewPlanContent: body.crewPlanContent,
+      crewPlanStartDt: body.crewPlanStartDt,
+      crewPlanEndDt: body.crewPlanEndDt,
+      crewPlanselectedDate: body.crewPlanselectedDate,
+      crewPlanStatus: 1, // 기본 상태를 1(하는 중)으로 설정
+      crewPlanPlace: body.crewPlanPlace,
+      crewPlanIsRegular: body.crewPlanIsRegular,
+      crewPlanCreatedDt: formatDateToLocalDateTime(new Date()),
     };
+
+    console.log("Transformed crewPlanData:", crewPlanData);
 
     // Send data to the Spring backend
     const response = await fetch(BASE_URL, {
@@ -50,11 +64,20 @@ export async function POST(request: Request) {
         { status: 200 }
       );
     } else {
-      const errorData = await response.json();
-      return NextResponse.json(
-        { message: `Spring 서버 에러: ${errorData.message}` },
-        { status: response.status }
-      );
+      const contentType = response.headers.get("Content-Type");
+      if (contentType && contentType.includes("application/json")) {
+        const errorData = await response.json();
+        return NextResponse.json(
+          { message: `Spring 서버 에러: ${errorData.message}` },
+          { status: response.status }
+        );
+      } else {
+        const errorText = await response.text();
+        return NextResponse.json(
+          { message: `Spring 서버 에러: ${errorText}` },
+          { status: response.status }
+        );
+      }
     }
   } catch (error) {
     console.error("서버 에러:", error);
