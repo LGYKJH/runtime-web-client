@@ -5,11 +5,12 @@ import { useState } from "react";
 import { Calendar as BaseCalendar } from "@/components/ui/calendar"; // 기존 컴포넌트 import
 import { CrewCalendarEventForm } from "@/app/dashboard/_components/CrewCalendarEventForm";
 
-function CrewCalendar({
-  onSelectDate,
-}: {
+interface CrewCalendarProps {
   onSelectDate: (date: Date | null) => void;
-}) {
+  crewId: number; // 추가된 crewId props
+}
+
+function CrewCalendar({ onSelectDate, crewId }: CrewCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   // 날짜 클릭 핸들러
@@ -32,6 +33,7 @@ function CrewCalendar({
       {selectedDate && (
         <CrewCalendarEventForm
           selectedDate={selectedDate}
+          crewId={crewId}
           onSubmit={(formData) => {
             console.log("Event added:", formData);
             setSelectedDate(null); // 제출 후 폼 숨기기
