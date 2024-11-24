@@ -24,8 +24,22 @@ const CreateRightBar: React.FC<CreateRightBarProps> = ({
   handleCreateCrew, // 함수 prop 추가
 }) => {
   const dayOptions = ["월", "화", "수", "목", "금", "토", "일"];
-  const sportOptions = ["로드 런", "트레일 런", "하프 마라톤", "마라톤", "리커버리 런", "조깅"];
-  const crewSizeOptions = ["1 ~ 4명", "5 ~ 8명", "9 ~ 12명", "13 ~ 16명", "17 ~ 20명", "20명 이상"];
+  const sportOptions = [
+    "로드 런",
+    "트레일 런",
+    "하프 마라톤",
+    "마라톤",
+    "리커버리 런",
+    "조깅",
+  ];
+  const crewSizeOptions = [
+    "1 ~ 4명",
+    "5 ~ 8명",
+    "9 ~ 12명",
+    "13 ~ 16명",
+    "17 ~ 20명",
+    "20명 이상",
+  ];
 
   const toggleMultiSelection = (
     value: string,
@@ -101,7 +115,10 @@ const CreateRightBar: React.FC<CreateRightBarProps> = ({
               variant="ghost"
               size="sm"
               className={`px-2.5 h-7 font-normal leading-normal rounded-full ${
-                crewSize === (size === "20명 이상" ? 50 : parseInt(size.match(/\d+/g)?.[1] || "0"))
+                crewSize ===
+                (size === "20명 이상"
+                  ? 50
+                  : parseInt(size.match(/\d+/g)?.[1] || "0"))
                   ? "bg-pointColor text-white"
                   : "hover:bg-pointColor hover:text-white"
               }`}

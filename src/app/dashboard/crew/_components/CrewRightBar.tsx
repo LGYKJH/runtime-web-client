@@ -23,6 +23,7 @@ const CrewRightBar = ({
   const user = useUserStore((state) => state.user);
   const [crewMemberInfo, setCrewMemberInfo] = useState<CrewMember[]>([]);
   const [isAlreadyMember, setIsAlreadyMember] = useState<boolean>(false);
+  const [myRole, setMyRole] = useState<number>();
 
   useEffect(() => {
     const fetchCrewMemberInfo = async () => {
@@ -42,6 +43,7 @@ const CrewRightBar = ({
         const crewMemberList: CrewMember[] = data.combinedData;
         setCrewMemberInfo(crewMemberList);
         setCurrentMemberNumber(data.currentMemberNumber);
+        setMyRole(data.userRole);
         if (data.isUserInCrew || data.isUserInWaiting) {
           setIsAlreadyMember(true);
         }
@@ -103,6 +105,7 @@ const CrewRightBar = ({
                 userName={member.userName}
                 userProfile={member.userProfile}
                 crewMemberRole={member.crewMemberRole.toString()}
+                myRole={myRole}
               />
             ))
           ) : (

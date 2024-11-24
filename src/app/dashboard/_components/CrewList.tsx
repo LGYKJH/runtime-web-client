@@ -57,25 +57,51 @@ const CrewList = () => {
   return (
     <div className="w-full flex flex-col justify-start items-center gap-y-7 pl-10 pr-7 py-7 flex-1 h-full">
       <CrewListMenu menuType={menuType} setMenuType={setMenuType} />
-      <div className="w-full overflow-y-scroll scrollbar-none flex flex-col justify-start items-center gap-y-7">
-        {crewList.map((crew) => {
-          const userRole = myCrew.find((uc) => uc.crewId === crew.crewId)?.role;
+      {menuType === "참여중인 크루" ? (
+        <div className="w-full overflow-y-scroll scrollbar-none flex flex-col justify-start items-center gap-y-7">
+          {crewList.map((crew) => {
+            const userRole = myCrew.find(
+              (uc) => uc.crewId === crew.crewId
+            )?.role;
 
-          console.log(userRole);
+            return (
+              <CrewCard
+                key={crew.crewId}
+                crewId={crew.crewId}
+                crewName={crew.crewName}
+                crewType={crew.crewType}
+                crewGoal={crew.crewGoal}
+                crewSize={crew.crewSize}
+                crewProfileImage={crew.crewProfileImage}
+                userRole={userRole ?? 4}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <div className="w-full overflow-y-scroll scrollbar-none flex flex-col justify-start items-center gap-y-7">
+          {crewList
+            .filter((crew) => myCrew.some((uc) => uc.crewId === crew.crewId))
+            .map((crew) => {
+              const userRole = myCrew.find(
+                (uc) => uc.crewId === crew.crewId
+              )?.role;
 
-          return (
-            <CrewCard
-              key={crew.crewId}
-              crewId={crew.crewId}
-              crewName={crew.crewName}
-              crewType={crew.crewType}
-              crewGoal={crew.crewGoal}
-              crewSize={crew.crewSize}
-              crewProfileImage={crew.crewProfileImage}
-            />
-          );
-        })}
-      </div>
+              return (
+                <CrewCard
+                  key={crew.crewId}
+                  crewId={crew.crewId}
+                  crewName={crew.crewName}
+                  crewType={crew.crewType}
+                  crewGoal={crew.crewGoal}
+                  crewSize={crew.crewSize}
+                  crewProfileImage={crew.crewProfileImage}
+                  userRole={userRole ?? 4}
+                />
+              );
+            })}
+        </div>
+      )}
     </div>
   );
 };

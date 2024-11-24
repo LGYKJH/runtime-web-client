@@ -17,6 +17,7 @@ interface CrewMemberCardProps {
   userName: string;
   userProfile: string | null;
   crewMemberRole: string;
+  myRole: number;
 }
 
 const CrewMemberCard = ({
@@ -24,6 +25,7 @@ const CrewMemberCard = ({
   userName,
   userProfile,
   crewMemberRole,
+  myRole,
 }: CrewMemberCardProps) => {
   const handleMemberAcceptButton = async () => {
     try {
@@ -147,8 +149,14 @@ const CrewMemberCard = ({
           align="end"
           sideOffset={20}
         >
-          {roleInfo.acceptButton && roleInfo.acceptButton}
-          {roleInfo.rejectButton && roleInfo.rejectButton}
+          {myRole == 1 && (roleInfo.acceptButton || roleInfo.rejectButton) ? (
+            <>
+              {roleInfo.acceptButton && roleInfo.acceptButton}
+              {roleInfo.rejectButton && roleInfo.rejectButton}
+            </>
+          ) : (
+            <span className="text-secondary text-sm">추가 기능 구현 중</span>
+          )}
         </PopoverContent>
       </Popover>
     </div>
