@@ -14,7 +14,6 @@ const CrewMemberCard = ({
   userProfile,
   crewMemberRole,
 }: CrewMemberCardProps) => {
-  // getRoleLabel 함수는 CrewMemberCard 내부에서만 사용
   const getRoleLabel = (role: string) => {
     switch (role) {
       case "1":
