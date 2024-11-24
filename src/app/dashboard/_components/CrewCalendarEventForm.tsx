@@ -54,10 +54,15 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
         crewPlanEndDt: formData.endTime
           ? formatToLocalDateTime(selectedDate, formData.endTime)
           : null,
-        crewPlanselectedDate: selectedDate.toISOString().split("T")[0],
+        crewPlanSelectedDate: selectedDate.toISOString().split("T")[0],
         crewPlanPlace: formData.place,
         crewPlanIsRegular: formData.category === "Regular Meeting" ? 1 : 0,
       };
+
+      console.log(
+        "프론트엔드 crewPlanselectedDate :" +
+          selectedDate.toISOString().split("T")[0]
+      );
 
       const response = await fetch("/api/crew/plan/create", {
         method: "POST",
