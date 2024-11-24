@@ -106,7 +106,7 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
               <SelectContent>
                 <SelectItem value="Regular Meeting">정기 모임</SelectItem>
                 <SelectItem value="Lightning Meeting">번개 모임</SelectItem>
-                <SelectItem value="Dinner">저녁 식사</SelectItem>
+                <SelectItem value="Dinner">회식</SelectItem>
               </SelectContent>
             </Select>
           </div>

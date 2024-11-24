@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import CrewCalendar from "../../_components/CrewCalendar";
-import { CrewPlans } from "@/app/types/crewPlans";
+import { CrewPlan } from "@/app/types/crewPlan";
+import { CrewCalendarEventForm } from "@/app/dashboard/_components/CrewCalendarEventForm";
 import { toast } from "sonner";
 
 interface CrewPlanSectionProps {
@@ -10,8 +11,9 @@ interface CrewPlanSectionProps {
 }
 
 const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
-  const [crewPlans, setCrewPlans] = useState<CrewPlans[]>([]);
-  const [selectedDatePlans, setSelectedDatePlans] = useState<CrewPlans[]>([]);
+  const [crewPlans, setCrewPlans] = useState<CrewPlan[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedPlans, setSelectedPlans] = useState<CrewPlan[]>([]);
 
   useEffect(() => {
     const fetchCrewCalendar = async () => {
@@ -21,7 +23,7 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
           throw new Error(`Error: ${response.status}`);
         }
 
-        const data: CrewPlans[] = await response.json();
+        const data: CrewPlan[] = await response.json();
 
         console.log(data);
         setCrewPlans(data);
@@ -34,46 +36,67 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
   }, [crewId]);
 
   const handleDateSelect = (date: Date | null) => {
-    // 날짜가 선택되지 않았을 경우 초기화
+    setSelectedDate(date);
     if (!date) {
-      setSelectedDatePlans([]);
+      // 날짜가 선택되지 않았을 경우 초기화
+      setSelectedPlans([]);
       return;
     }
 
     // 날짜에 해당하는 계획 필터링
-    const selectedPlans = crewPlans.filter((plan) => {
-      const planStart = new Date(plan.crewPlanStartDt);
-      const planEnd = plan.crewPlanEndDt ? new Date(plan.crewPlanEndDt) : null;
-
-      // 날짜가 시작일과 종료일 사이에 있는지 확인
-      if (planEnd) {
-        return date >= planStart && date <= planEnd;
-      }
-      return date.toDateString() === planStart.toDateString();
+    const filteredPlans = crewPlans.filter((plan) => {
+      const start = new Date(plan.crewPlanStartDt);
+      const end = plan.crewPlanEndDt ? new Date(plan.crewPlanEndDt) : null;
+      return end
+        ? date >= start && date <= end
+        : start.toDateString() === date.toDateString();
     });
 
-    setSelectedDatePlans(selectedPlans);
+    setSelectedPlans(filteredPlans);
   };
 
   return (
     <div className="w-full flex flex-col items-center gap-y-5 px-10">
-      <CrewCalendar onSelectDate={handleDateSelect} crewId={crewId} />
-      <div className="mt-4">
-        <h2 className="text-lg font-semibold">선택한 날짜의 크루 일정</h2>
-        {selectedDatePlans.length > 0 ? (
+      <CrewCalendar crewId={crewId} onSelectDate={handleDateSelect} />
+      {selectedDate && selectedPlans.length === 0 && (
+        <CrewCalendarEventForm
+          crewId={crewId}
+          selectedDate={selectedDate}
+          onSubmit={() => setSelectedDate(null)}
+          onCancel={() => setSelectedDate(null)} // 취소 버튼으로 폼 숨기기
+        />
+      )}
+      {selectedPlans.length > 0 && (
+        <div className="mt-4">
+          <h2 className="text-lg font-semibold">선택한 날짜의 일정</h2>
           <ul>
-            {selectedDatePlans.map((plan) => (
-              <li key={plan.crewPlanId} className="text-sm">
-                {plan.crewPlanContent} @ {plan.crewPlanPlace || "위치 없음"}
+            {selectedPlans.map((plan) => (
+              <li
+                key={plan.crewPlanId}
+                className="text-sm flex justify-between items-center"
+              >
+                <span>
+                  {plan.crewPlanContent} @ {plan.crewPlanPlace || "위치 없음"}
+                </span>
+                <div>
+                  <button
+                    className="text-blue-500 mr-2"
+                    onClick={() => console.log(`수정: ${plan.crewPlanId}`)}
+                  >
+                    수정
+                  </button>
+                  <button
+                    className="text-red-500"
+                    onClick={() => console.log(`삭제: ${plan.crewPlanId}`)}
+                  >
+                    삭제
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
-        ) : (
-          <p className="text-sm text-gray-500">
-            선택한 날짜에 일정이 없습니다.
-          </p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
