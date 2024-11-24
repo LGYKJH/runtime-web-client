@@ -32,13 +32,15 @@ export async function POST(request: Request) {
       );
     }
 
+    console.log("중간서버 crewPlanselectedDate :" + body.crewPlanSelectedDate);
+
     // Transform the data to match the Spring backend DTO
     const crewPlanData = {
       crewId: body.crewId,
       crewPlanContent: body.crewPlanContent,
       crewPlanStartDt: body.crewPlanStartDt,
       crewPlanEndDt: body.crewPlanEndDt,
-      crewPlanselectedDate: body.crewPlanselectedDate,
+      crewPlanSelectedDate: body.crewPlanSelectedDate,
       crewPlanStatus: 1, // 기본 상태를 1(하는 중)으로 설정
       crewPlanPlace: body.crewPlanPlace,
       crewPlanIsRegular: body.crewPlanIsRegular,

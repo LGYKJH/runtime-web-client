@@ -54,10 +54,15 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
         crewPlanEndDt: formData.endTime
           ? formatToLocalDateTime(selectedDate, formData.endTime)
           : null,
-        crewPlanselectedDate: selectedDate.toISOString().split("T")[0],
+        crewPlanSelectedDate: selectedDate.toISOString().split("T")[0],
         crewPlanPlace: formData.place,
         crewPlanIsRegular: formData.category === "Regular Meeting" ? 1 : 0,
       };
+
+      console.log(
+        "프론트엔드 crewPlanselectedDate :" +
+          selectedDate.toISOString().split("T")[0]
+      );
 
       const response = await fetch("/api/crew/plan/create", {
         method: "POST",
@@ -99,9 +104,9 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
                 <SelectValue placeholder="선택하기" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Regular Meeting">정기 모임</SelectItem>
-                <SelectItem value="Lightning Meeting">번개 모임</SelectItem>
-                <SelectItem value="Dinner">저녁 식사</SelectItem>
+                <SelectItem value="정기모임">정기모임</SelectItem>
+                <SelectItem value="번개모임">번개모임</SelectItem>
+                <SelectItem value="회식">회식</SelectItem>
               </SelectContent>
             </Select>
           </div>
