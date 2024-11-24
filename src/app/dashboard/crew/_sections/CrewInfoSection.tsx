@@ -9,9 +9,13 @@ import { toast } from "sonner";
 
 interface CrewInfoSectionProps {
   crewId: number;
+  currentMemberNumber: number;
 }
 
-const CrewInfoSection = ({ crewId }: CrewInfoSectionProps) => {
+const CrewInfoSection = ({
+  crewId,
+  currentMemberNumber,
+}: CrewInfoSectionProps) => {
   const [crewBasicInfo, setCrewBasicInfo] = useState<Crew>();
 
   useEffect(() => {
@@ -43,6 +47,7 @@ const CrewInfoSection = ({ crewId }: CrewInfoSectionProps) => {
             crewSize={crewBasicInfo.crewSize}
             crewPlace={crewBasicInfo.crewPlace}
             crewProfileImage={crewBasicInfo.crewProfileImage}
+            currentMemberNumber={currentMemberNumber}
           />
           <CrewInfoReviewList />
           <CrewInfoIntroduction crewGoal={crewBasicInfo.crewGoal} />
