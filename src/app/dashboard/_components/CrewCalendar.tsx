@@ -18,6 +18,7 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
   // 날짜 클릭 핸들러
   const handleDayClick = (date: Date | undefined) => {
     const selected = date || null;
+    console.log("Day Clicked:", selected); // 추가
     setSelectedDate(selected);
     onSelectDate(selected);
   };
@@ -26,11 +27,8 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
   const getDayPlans = (date: Date): string[] => {
     return crewPlans
       .filter((plan) => {
-        const start = new Date(plan.crewPlanStartDt);
-        const end = plan.crewPlanEndDt ? new Date(plan.crewPlanEndDt) : null;
-        return end
-          ? date >= start && date <= end
-          : date.toDateString() === start.toDateString();
+        const selectedDate = new Date(plan.crewPlanSelectedDate);
+        return date.toDateString() === selectedDate.toDateString();
       })
       .map((plan) => plan.crewPlanContent);
   };
@@ -42,7 +40,10 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
         mode="single"
         style={{ width: "100%" }}
         selected={selectedDate}
-        onSelect={handleDayClick} // 날짜 선택 핸들러 전달
+        onSelect={(date) => {
+          console.log("BaseCalendar onSelect:", date); // 로그 추가
+          handleDayClick(date); // 날짜 클릭 핸들러 호출
+        }}
         showOutsideDays={true} // 바깥 날짜 표시
         classNames={{
           months:
@@ -51,6 +52,32 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
           table: "w-full h-full border-collapse space-y-1",
           head_row: "",
           row: "w-full mt-2",
+          cell: "h-14",
+        }}
+        components={{
+          Day: ({ date, ...props }) => {
+            const plans = getDayPlans(date);
+
+            return (
+              <div className="relative" onClick={() => handleDayClick(date)}>
+                <span>{date.getDate()}</span>
+                {plans.length > 0 && (
+                  <div className="absolute bottom-0 left-0 right-0 flex flex-wrap justify-center">
+                    {plans.slice(0, 2).map((content, idx) => (
+                      <Badge key={idx} variant="outline" className="text-xs">
+                        {content}
+                      </Badge>
+                    ))}
+                    {plans.length > 2 && (
+                      <span className="text-xs text-muted-foreground">
+                        +{plans.length - 2}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          },
         }}
       />
       {/* 날짜에 따른 일정 배지 표시 */}
