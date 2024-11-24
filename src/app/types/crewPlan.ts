@@ -4,7 +4,10 @@ export interface CrewPlan {
   crewPlanContent: string;
   crewPlanStartDt: string;
   crewPlanEndDt?: string;
+  crewPlanStatus: number;
   crewPlanSelectedDate: string;
-  crewPlanPlace: string;
+  crewPlanPlace?: string;
   crewPlanIsRegular: number;
+  crewPlanCreatedDt: string;
+  crewPlanUpdatedDt?: string;
 }
