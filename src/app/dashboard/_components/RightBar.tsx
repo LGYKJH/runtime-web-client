@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import React, { useRef } from "react";
 import { useFilterStore } from "@/app/_stores/filterStore";
 import NaverMap from "./NaverMap";
+import { RefreshCcw } from "lucide-react";
 
 type Districts =
   | "강남구"
@@ -63,11 +64,20 @@ const RightBar = () => {
     toggleSport,
     setCrewSize,
     setDistrict,
+    resetDays,
+    resetSports,
   } = useFilterStore();
 
   const districtHandlerRef = useRef<((district: Districts) => void) | null>(
     null
   );
+
+  const handleResetClick = () => {
+    resetDays();
+    resetSports();
+    setCrewSize(null);
+    setDistrict(null);
+  };
 
   const handleDistrictClick = (district: Districts) => {
     // 장소 선택 토글
@@ -85,7 +95,17 @@ const RightBar = () => {
   return (
     <section className="min-w-[320px] max-w-[320px] flex flex-col justify-start items-center gap-y-4 px-4 py-4 border-l-[0.5px] border-l-sidebar-border">
       <div className="w-full px-1 pt-1.5 pb-2 gap-y-1 flex flex-col justify-start items-start">
-        <h4 className="pb-2">필터</h4>
+        <div className="w-full flex flex-row justify-between items-center">
+          <h4 className="pb-2">필터</h4>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-4 h-4"
+            onClick={handleResetClick}
+          >
+            <RefreshCcw className="text-secondary" />
+          </Button>
+        </div>
 
         {/* 요일 선택 */}
         <Label className="font-normal py-1.5 text-secondary">요일</Label>
