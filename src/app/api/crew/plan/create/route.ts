@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     // Transform the data to match the Spring backend DTO
     const crewPlanData = {
-      crewId: body.crewId,
+      crewId: isNaN(body.crewId) ? parseFloat(body.crewId) : body.crewId,
       crewPlanContent: body.crewPlanContent,
       crewPlanStartDt: body.crewPlanStartDt,
       crewPlanEndDt: body.crewPlanEndDt,
