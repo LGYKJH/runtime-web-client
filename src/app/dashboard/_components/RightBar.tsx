@@ -6,7 +6,6 @@ import React, { useRef } from "react";
 import { useFilterStore } from "@/app/_stores/filterStore";
 import NaverMap from "./NaverMap";
 
-// 지역 이름 타입
 type Districts =
   | "강남구"
   | "강서구"
@@ -55,7 +54,6 @@ const RightBar = () => {
     "종로구",
   ];
 
-  // Zustand store 상태 가져오기
   const {
     selectedDays,
     selectedSports,
@@ -67,16 +65,21 @@ const RightBar = () => {
     setDistrict,
   } = useFilterStore();
 
-  // MutableRefObject로 타입 지정
   const districtHandlerRef = useRef<((district: Districts) => void) | null>(
     null
   );
 
   const handleDistrictClick = (district: Districts) => {
-    setDistrict(district);
+    // 장소 선택 토글
+    setDistrict(selectedDistrict === district ? null : district);
     if (districtHandlerRef.current) {
       districtHandlerRef.current(district);
     }
+  };
+
+  const handleCrewSizeClick = (size: string) => {
+    // 인원수 선택 토글
+    setCrewSize(selectedCrewSize === size ? null : size);
   };
 
   return (
@@ -137,7 +140,7 @@ const RightBar = () => {
                   ? "bg-pointColor text-white"
                   : "hover:bg-pointColor hover:text-white"
               }`}
-              onClick={() => setCrewSize(size)}
+              onClick={() => handleCrewSizeClick(size)}
             >
               {size}
             </Button>
