@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 // Helper function to format Date to 'YYYY-MM-DDTHH:mm:ss'
 const formatDateToLocalDateTime = (date) => {
@@ -14,7 +15,16 @@ export async function POST(request: Request) {
   const BASE_URL = `${process.env.BASE_URL}/crews/plan/create`;
 
   try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
     const body = await request.json();
+
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: "액세스 토큰이 존재하지 않습니다." },
+        { status: 400 }
+      );
+    }
 
     // body 내용을 console.log로 출력
     console.log("Request body:", body);
@@ -54,8 +64,10 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Cookie: `access_token=${accessToken};`,
       },
       body: JSON.stringify(crewPlanData),
+      credentials: "include",
     });
 
     // Handle Spring backend response

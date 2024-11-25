@@ -6,6 +6,15 @@ export async function POST(request: NextRequest) {
   const BASE_URL = `${process.env.BASE_URL}/crews/create`;
 
   try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: "액세스 토큰이 존재하지 않습니다." },
+        { status: 400 }
+      );
+    }
+
     const {
       crewName,
       types,
@@ -34,8 +43,10 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Cookie: `access_token=${accessToken};`,
       },
       body: JSON.stringify(body),
+      credentials: "include",
     });
 
     if (!response.ok) {

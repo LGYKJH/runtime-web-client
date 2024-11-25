@@ -75,5 +75,5 @@ const validateAndRefreshToken = async (
 };
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/dashboard", "/dashdash"],
+  matcher: ["/dashboard/:path*", "/dashboard"],
 };

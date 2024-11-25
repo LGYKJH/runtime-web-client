@@ -1,13 +1,10 @@
-
 import { NextResponse, NextRequest } from "next/server";
 import { cookies } from "next/headers";
-
 
 export async function GET(request: NextRequest) {
   const BASE_URL = `${process.env.BASE_URL}/users/detail`;
 
   try {
-
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
 
@@ -27,9 +24,8 @@ export async function GET(request: NextRequest) {
         "Content-Type": "application/json",
         Cookie: `access_token=${accessToken};`,
       },
-      
+      credentials: "include",
     });
-
 
     const userData = await response.json();
 

@@ -12,12 +12,24 @@ export async function POST(request: Request) {
   const BASE_URL = `${process.env.BASE_URL}/crews/plan/detail?crewId=${crewId}`;
 
   try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
+
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: "액세스 토큰이 존재하지 않습니다." },
+        { status: 400 }
+      );
+    }
+
     // 백엔드 호출
     const response = await fetch(BASE_URL, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Cookie: `access_token=${accessToken};`,
       },
+      credentials: "include",
     });
 
     if (!response.ok) {

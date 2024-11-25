@@ -8,7 +8,10 @@ export async function POST(request: NextRequest) {
     const { file, fileName } = await request.json();
 
     if (!file || !fileName) {
-      return NextResponse.json({ error: "file과 fileName이 필요합니다." }, { status: 400 });
+      return NextResponse.json(
+        { error: "file과 fileName이 필요합니다." },
+        { status: 400 }
+      );
     }
 
     // Base64 데이터를 Blob으로 변환
@@ -25,7 +28,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: downloadURL });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.";
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "알 수 없는 오류가 발생했습니다.";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
