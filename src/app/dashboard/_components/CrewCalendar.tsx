@@ -47,12 +47,12 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
         showOutsideDays={true} // 바깥 날짜 표시
         classNames={{
           months:
-            "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-          month: "space-y-4 w-full flex flex-col",
+            "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
+          month: "space-y-4 w-full",
           table: "w-full h-full border-collapse space-y-1",
           head_row: "",
           row: "w-full mt-2",
-          cell: "relative h-auto p-1 align-top",
+          cell: "relative h-auto p-2 align-top",
         }}
         components={{
           Day: ({ date, ...props }) => {
@@ -60,29 +60,26 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
 
             return (
               <div
-                className="relative h-full w-full flex flex-col p-2"
+                className="flex flex-col items-start h-full w-full"
                 onClick={() => handleDayClick(date)}
               >
-                <div className="flex justify-between items-start w-full">
-                  {/* 날짜는 왼쪽 정렬 */}
-                  <span className="text-sm">{date.getDate()}</span>
+                {/* 날짜는 왼쪽 정렬 */}
+                <span className="text-sm">{date.getDate()}</span>
 
-                  {/* 일정 목록은 오른쪽 정렬 */}
-                  {plans.length > 0 && (
-                    <div className="flex flex-col items-end gap-1">
-                      {plans.slice(0, 2).map((content, idx) => (
-                        <Badge key={idx} variant="outline" className="text-xs">
-                          {content}
-                        </Badge>
-                      ))}
-                      {plans.length > 2 && (
-                        <span className="text-xs text-muted-foreground">
-                          +{plans.length - 2}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
+                {/* 일정 목록은 오른쪽 정렬 */}
+                {plans.length > 0 && (
+                  <div className="flex flex-col items-start mt-1 space-y-1">
+                    {plans.map((content, idx) => (
+                      <Badge
+                        key={idx}
+                        variant="outline"
+                        className="text-xs truncate"
+                      >
+                        {content}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           },
