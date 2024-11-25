@@ -65,40 +65,39 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
       <div className="mt-4">
         {selectedDate && (
           <div>
-            {/* 선택한 날짜의 일정 리스트 */}
-            {selectedPlans.length > 0 && (
-              <div>
-                <h2 className="text-lg font-semibold">선택한 날짜의 일정</h2>
-                <ul>
-                  {selectedPlans.map((plan) => (
-                    <li key={plan.crewPlanId} className="text-sm border-b py-2">
-                      <p className="font-medium">{plan.crewPlanContent}</p>
-                      <p className="text-sm text-gray-600">
-                        장소: {plan.crewPlanPlace || "위치 없음"}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        시간: {plan.crewPlanStartDt} ~{" "}
-                        {plan.crewPlanEndDt || "없음"}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <h2 className="text-lg font-semibold">
+              {selectedDate.toDateString()} 일정
+            </h2>
+            {selectedPlans.length > 0 ? (
+              <ul>
+                {selectedPlans.map((plan) => (
+                  <li key={plan.crewPlanId} className="text-sm border-b py-2">
+                    <p className="font-medium">{plan.crewPlanContent}</p>
+                    <p className="text-sm text-gray-600">
+                      장소: {plan.crewPlanPlace || "위치 없음"}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      시간: {plan.crewPlanStartDt} ~{" "}
+                      {plan.crewPlanEndDt || "없음"}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-gray-600">
+                선택한 날짜에 일정이 없습니다.
+              </p>
             )}
 
-            {/* 일정 등록 폼: 모든 선택 날짜에 표시 */}
             <div className="mt-4">
-              <h2 className="text-lg font-semibold">
-                {selectedDate.toDateString()} 일정 추가
-              </h2>
               <CrewCalendarEventForm
                 crewId={crewId}
                 selectedDate={selectedDate}
                 onSubmit={() => {
-                  setSelectedDate(null); // 폼 제출 후 선택된 날짜 초기화
+                  setSelectedDate(null);
                   toast.success("일정이 추가되었습니다!");
                 }}
-                onCancel={() => setSelectedDate(null)} // 취소 후 초기화
+                onCancel={() => setSelectedDate(null)}
               />
             </div>
           </div>
