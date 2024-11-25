@@ -43,7 +43,8 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
     };
 
     fetchCrewCalendar();
-  }, [crewId]);
+    console.log(selectedPlans);
+  }, [crewId, selectedDate]);
 
   const handleDateSelect = (date: Date | null) => {
     console.log("Selected Date:", date);
@@ -79,7 +80,7 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
       />
 
       <div className="w-2/5">
-        {selectedDate && (
+        {selectedDate && selectedPlans && (
           <div>
             <div className="w-full flex flex-col border rounded-md py-4 px-4">
               <h2 className="text-lg font-semibold">
@@ -87,8 +88,11 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
               </h2>
               {selectedPlans.length > 0 ? (
                 <ul>
-                  {selectedPlans.map((plan) => (
-                    <li key={plan.crewPlanId} className="text-sm border-b py-2">
+                  {selectedPlans.map((plan, index) => (
+                    <li
+                      key={`${plan.crewPlanId}-${index}`}
+                      className="text-sm border-b py-2"
+                    >
                       <p className="font-medium">{plan.crewPlanContent}</p>
                       <p className="text-sm text-gray-600">
                         장소: {plan.crewPlanPlace || "위치 없음"}

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Calendar as BaseCalendar } from "@/components/ui/calendar"; // 기존 컴포넌트 import
 import { Badge } from "@/components/ui/badge"; // 새로 추가된 컴포넌트
 import { CrewPlan } from "@/app/types/crewPlan";
+import { ko } from "date-fns/locale";
 
 interface CrewCalendarProps {
   onSelectDate: (date: Date | null) => void;
@@ -23,28 +24,51 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
     onSelectDate(selected);
   };
 
-  // 새로 추가
   const getDayPlans = (date: Date): string[] => {
+    // 입력된 날짜를 ISO 형식으로 변환 후 'YYYY-MM-DD' 형식만 추출
+    const selectedDate = date.toISOString().split("T")[0];
+
+    console.log("Selected Date:", selectedDate);
+    console.log("Crew Plan Dates:");
+    crewPlans.forEach((plan) => {
+      const databaseDate = new Date(plan.crewPlanSelectedDate)
+        .toISOString()
+        .split("T")[0];
+      console.log({
+        crewPlanSelectedDate: plan.crewPlanSelectedDate,
+        databaseDate,
+        selectedDate,
+        matches: databaseDate === selectedDate,
+      });
+    });
+
+    // DB에서 가져온 날짜와 비교
     return crewPlans
       .filter((plan) => {
-        const selectedDate = new Date(plan.crewPlanSelectedDate);
-        return date.toDateString() === selectedDate.toDateString();
+        const databaseDate = new Date(plan.crewPlanSelectedDate)
+          .toISOString()
+          .split("T")[0];
+        return databaseDate === selectedDate; // 비교 시 ISO 형식 통일
       })
       .map((plan) => plan.crewPlanContent);
   };
 
   return (
     <div className="w-full flex flex-col items-start justify-center">
-      {/* 기존 Calendar 컴포넌트를 활용 */}
       <BaseCalendar
         mode="single"
-        style={{ width: "100%" }}
+        locale={ko}
+        defaultMonth={new Date()}
         selected={selectedDate}
-        onSelect={(date) => {
-          console.log("BaseCalendar onSelect:", date); // 로그 추가
-          handleDayClick(date); // 날짜 클릭 핸들러 호출
-        }}
-        showOutsideDays={true} // 바깥 날짜 표시
+        onSelect={(date) =>
+          handleDayClick(
+            date ? new Date(date) : null // 날짜를 다시 Date 객체로 변환
+          )
+        }
+        showOutsideDays={true}
+        numberOfMonths={1}
+        weekStartsOn={0}
+        style={{ width: "100%" }}
         classNames={{
           months:
             "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
@@ -65,14 +89,12 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
                 className="relative flex flex-col items-start justify-between p-2"
                 onClick={() => handleDayClick(date)}
                 style={{
-                  aspectRatio: "1 / 1", // 셀을 정사각형으로 고정
-                  minWidth: 0, // flexbox 환경에서 너비 계산 안정화
+                  aspectRatio: "1 / 1",
+                  minWidth: 0,
                 }}
               >
                 <div className="absolute inset-0 flex flex-col justify-start items-start p-2 gap-y-2">
-                  {/* 날짜는 왼쪽 정렬 */}
                   <span className="text-sm">{date.getDate()}</span>
-
                   {plans.length > 0 && (
                     <div className="flex flex-col justify-start items-start">
                       {plans.slice(0, 2).map((content, idx) => (
