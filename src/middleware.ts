@@ -4,53 +4,98 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("access_token")?.value;
+  // const accessToken = cookieStore.get("access_token")?.value;
+  const accessToken = "1234123412341234";
   const refreshToken = cookieStore.get("refresh_token")?.value;
 
-  if (!accessToken) {
-    return NextResponse.redirect(new URL("/users/login", request.url));
-  }
+  // if (!accessToken) {
+  //   return NextResponse.redirect(`${process.env.BASE_URL}/users/login`);
+  // }
 
-  // // accessToken이 있으면 API로 검증 요청
-  // const isValidToken = validateToken(accessToken);
+  const isValidToken = await validateToken(accessToken, refreshToken);
 
   // if (!isValidToken) {
-  //   // 토큰이 유효하지 않으면 로그인 페이지로 리다이렉트
-  //   return NextResponse.redirect(new URL("/login", request.url));
+  //   return NextResponse.redirect(`${process.env.BASE_URL}/users/login`);
   // }
 
   // 유효한 경우 요청을 그대로 전달
   return NextResponse.next();
 }
 
-// const validateToken = async (token: string) => {
-//   const BASE_URL = `${process.env.BASE_URL}/auth/validateToken`;
+const validateToken = async (accessToken: string, refreshToken: string) => {
+  const BASE_URL = `${process.env.BASE_URL}/auth/validateToken`;
 
-//   try {
-//     const response = await fetch(BASE_URL, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-//   } catch (error) {}
-// };
+  try {
+    const response = await fetch(BASE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `access_token=${accessToken}; refresh_token=${refreshToken};`,
+      },
+    });
 
-// // 토큰 검증 함수 (예제: 실제 검증 API 호출 가능)
-// function validateToken(token: string): boolean {
-//   // 여기서 서버 요청을 통해 검증할 수도 있습니다.
-//   // 예를 들어, fetch 요청을 통해 서버에 유효성을 확인 가능.
-//   try {
-//     // JWT 디코딩 및 간단한 유효성 체크 (실제 검증은 서버에서 처리)
-//     const decoded = JSON.parse(atob(token.split(".")[1]));
-//     const now = Math.floor(Date.now() / 1000);
-//     return decoded.exp > now; // 토큰이 만료되지 않은 경우
-//   } catch (error) {
-//     console.error("토큰 검증 실패:", error);
-//     return false;
-//   }
-// }
+    if (response.status === 401) {
+      console.error("Access token expired. Refreshing token...");
+      const refreshResponse = await refreshAccessToken(refreshToken);
+      return refreshResponse;
+    }
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      return false;
+    }
+
+    const data = await response.json();
+    return data.newAccessTokenIssued || false;
+  } catch (error) {
+    console.error("Error validating token:", error.message);
+    return false;
+  }
+};
+
+const refreshAccessToken = async (refreshToken: string) => {
+  const BASE_URL = `${process.env.BASE_URL}/auth/validateToken`;
+
+  try {
+    const response = await fetch(BASE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `refresh_token=${refreshToken};`,
+      },
+    });
+
+    if (!response.ok) {
+      console.error(
+        `Failed to refresh token. HTTP error! status: ${response.status}`
+      );
+      return false;
+    }
+
+    const data = await response.json();
+
+    if (data.newAccessToken) {
+      console.log("New Access Token Issued:", data.newAccessToken);
+
+      // Create a new response to set cookies
+      const response = NextResponse.next();
+      response.cookies.set("access_token", data.newAccessToken, {
+        httpOnly: true,
+      });
+      response.cookies.set("refresh_token", data.newRefreshToken, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60,
+      });
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error("Error refreshing token:", error.message);
+    return false;
+  }
+};
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/dashboard"],
 };
