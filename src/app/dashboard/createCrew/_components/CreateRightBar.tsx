@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
+import React, { useState } from "react";
 
 interface CreateRightBarProps {
   days: string[];
@@ -23,7 +23,7 @@ interface CreateRightBarProps {
   setEndTime: React.Dispatch<React.SetStateAction<string>>;
   crewSize: number | undefined;
   setCrewSize: React.Dispatch<React.SetStateAction<number | undefined>>;
-  handleCreateCrew: () => void;
+  handleCreateCrew: () => Promise<void>; // 비동기 함수로 수정
 }
 
 const CreateRightBar: React.FC<CreateRightBarProps> = ({
@@ -37,8 +37,10 @@ const CreateRightBar: React.FC<CreateRightBarProps> = ({
   setStartTime,
   endTime,
   setEndTime,
-  handleCreateCrew, // 함수 prop 추가
+  handleCreateCrew,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 상태 추가
+
   const dayOptions = ["월", "화", "수", "목", "금", "토", "일"];
   const sportOptions = [
     "로드 런",
@@ -63,17 +65,29 @@ const CreateRightBar: React.FC<CreateRightBarProps> = ({
     setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>
   ) => {
     if (selectedItems.includes(value)) {
-      setSelectedItems(selectedItems.filter((item) => item !== value)); // 이미 선택된 값 제거
+      setSelectedItems(selectedItems.filter((item) => item !== value));
     } else {
-      setSelectedItems([...selectedItems, value]); // 새로운 값 추가
+      setSelectedItems([...selectedItems, value]);
     }
   };
 
   const handleCrewSizeSelection = (sizeOption: string) => {
-    const match = sizeOption.match(/\d+/g); // 숫자 추출 (예: ["1", "4"])
+    const match = sizeOption.match(/\d+/g);
     if (match) {
-      const maxSize = parseInt(match[match.length - 1]); // 마지막 숫자를 최대값으로 설정
+      const maxSize = parseInt(match[match.length - 1]);
       setCrewSize(sizeOption === "20명 이상" ? 50 : maxSize);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return; // 이미 제출 중이면 중복 호출 방지
+    setIsSubmitting(true);
+    try {
+      await handleCreateCrew(); // 비동기 함수 호출
+    } catch (error) {
+      console.error("Error during crew creation:", error);
+    } finally {
+      setIsSubmitting(false); // 로딩 상태 해제
     }
   };
 
@@ -138,9 +152,9 @@ const CreateRightBar: React.FC<CreateRightBarProps> = ({
                 종료 시간
               </Label>
               <Select
-                defaultValue={startTime!}
+                defaultValue={endTime!}
                 onValueChange={(e: string) => {
-                  setStartTime(e);
+                  setEndTime(e);
                 }}
               >
                 <SelectTrigger className="font-normal flex flex-1">
@@ -212,8 +226,12 @@ const CreateRightBar: React.FC<CreateRightBarProps> = ({
 
       {/* 제출 버튼 */}
       <div className="absolute bottom-[56px] w-full flex flex-row justify-center items-center">
-        <Button className="w-[88%]" onClick={handleCreateCrew}>
-          제출하기
+        <Button
+          className="w-[88%]"
+          onClick={handleSubmit}
+          disabled={isSubmitting} // 버튼 비활성화
+        >
+          {isSubmitting ? "크루 생성 중..." : "크루 생성하기"}
         </Button>
       </div>
     </section>
