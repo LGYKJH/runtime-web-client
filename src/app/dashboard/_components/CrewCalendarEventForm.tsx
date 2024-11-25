@@ -31,6 +31,27 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  //////// 한국 시간으로 바꾸기
+  const formatToKoreanDateTime = (date: Date, time: string) => {
+    const [hours, minutes] = time.split(":").map(Number);
+
+    // 원본 날짜에 시간 설정
+    const koreanDate = new Date(date);
+    koreanDate.setHours(hours + 9); // 한국 시간으로 9시간 추가
+    koreanDate.setMinutes(minutes);
+
+    // "yyyy-MM-dd'T'HH:mm:ss" 형식으로 변환
+    const yyyy = koreanDate.getFullYear();
+    const mm = String(koreanDate.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
+    const dd = String(koreanDate.getDate()).padStart(2, "0");
+    const hh = String(koreanDate.getHours()).padStart(2, "0");
+    const mi = String(koreanDate.getMinutes()).padStart(2, "0");
+    const ss = String(koreanDate.getSeconds()).padStart(2, "0");
+
+    return `${yyyy}-${mm}-${dd}T${hh}:${mi}:${ss}`;
+  };
+  ///////////
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.category || !formData.place || !formData.startTime) {
@@ -39,20 +60,15 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
     }
 
     try {
-      // LocalDateTime 형식으로 변환
-      const formatToLocalDateTime = (date: Date, time: string) => {
-        return `${date.toISOString().split("T")[0]}T${time}:00`;
-      };
-
       const crewPlanData = {
         crewId,
         crewPlanContent: formData.category,
-        crewPlanStartDt: formatToLocalDateTime(
+        crewPlanStartDt: formatToKoreanDateTime(
           selectedDate,
           formData.startTime
         ),
         crewPlanEndDt: formData.endTime
-          ? formatToLocalDateTime(selectedDate, formData.endTime)
+          ? formatToKoreanDateTime(selectedDate, formData.endTime)
           : null,
         crewPlanSelectedDate: selectedDate.toISOString().split("T")[0],
         crewPlanPlace: formData.place,
