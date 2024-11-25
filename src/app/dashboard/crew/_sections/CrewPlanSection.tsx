@@ -70,7 +70,7 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
   }
 
   return (
-    <div className="w-full flex flex-col items-center gap-y-5 px-10">
+    <div className="w-full flex flex-row justify-start items-start gap-y-5 px-10">
       {/* 캘린더 컴포넌트 */}
       <CrewCalendar
         crewId={crewId}
@@ -78,33 +78,34 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
         crewPlans={crewPlans}
       />
 
-      <div className="mt-4">
+      <div className="w-2/5">
         {selectedDate && (
           <div>
-            <h2 className="text-lg font-semibold">
-              {selectedDate.toDateString()} 일정
-            </h2>
-            {selectedPlans.length > 0 ? (
-              <ul>
-                {selectedPlans.map((plan) => (
-                  <li key={plan.crewPlanId} className="text-sm border-b py-2">
-                    <p className="font-medium">{plan.crewPlanContent}</p>
-                    <p className="text-sm text-gray-600">
-                      장소: {plan.crewPlanPlace || "위치 없음"}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      시간: {plan.crewPlanStartDt} ~{" "}
-                      {plan.crewPlanEndDt || "없음"}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-gray-600">
-                선택한 날짜에 일정이 없습니다.
-              </p>
-            )}
-
+            <div className="w-full flex flex-col border rounded-md py-4 px-4">
+              <h2 className="text-lg font-semibold">
+                {selectedDate.toDateString()} 일정
+              </h2>
+              {selectedPlans.length > 0 ? (
+                <ul>
+                  {selectedPlans.map((plan) => (
+                    <li key={plan.crewPlanId} className="text-sm border-b py-2">
+                      <p className="font-medium">{plan.crewPlanContent}</p>
+                      <p className="text-sm text-gray-600">
+                        장소: {plan.crewPlanPlace || "위치 없음"}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        시간: {plan.crewPlanStartDt} ~{" "}
+                        {plan.crewPlanEndDt || "없음"}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  선택한 날짜에 일정이 없습니다.
+                </p>
+              )}
+            </div>
             <div className="mt-4">
               <CrewCalendarEventForm
                 crewId={crewId}

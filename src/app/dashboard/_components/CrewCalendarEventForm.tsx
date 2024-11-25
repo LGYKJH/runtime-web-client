@@ -106,7 +106,7 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
           {selectedDate.toDateString()} 일정 등록하기
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4">
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Category */}
           <div>

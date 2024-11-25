@@ -34,7 +34,7 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center px-5">
+    <div className="w-full flex flex-col items-start justify-center">
       {/* 기존 Calendar 컴포넌트를 활용 */}
       <BaseCalendar
         mode="single"
@@ -50,9 +50,11 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
             "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
           month: "space-y-4 w-full flex flex-col",
           table: "w-full h-full border-collapse space-y-1",
+          head: "",
           head_row: "",
+          head_cell: "py-2.5",
           row: "w-full mt-2",
-          cell: "relative h-auto p-1 align-top",
+          cell: "relative p-1 align-top",
         }}
         components={{
           Day: ({ date, ...props }) => {
@@ -60,16 +62,19 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
 
             return (
               <div
-                className="relative h-full w-full flex flex-col p-2"
+                className="relative flex flex-col items-start justify-between p-2"
                 onClick={() => handleDayClick(date)}
+                style={{
+                  aspectRatio: "1 / 1", // 셀을 정사각형으로 고정
+                  minWidth: 0, // flexbox 환경에서 너비 계산 안정화
+                }}
               >
-                <div className="flex justify-between items-start w-full">
+                <div className="absolute inset-0 flex flex-col justify-start items-start p-2 gap-y-2">
                   {/* 날짜는 왼쪽 정렬 */}
                   <span className="text-sm">{date.getDate()}</span>
 
-                  {/* 일정 목록은 오른쪽 정렬 */}
                   {plans.length > 0 && (
-                    <div className="flex flex-col items-end gap-1">
+                    <div className="flex flex-col justify-start items-start">
                       {plans.slice(0, 2).map((content, idx) => (
                         <Badge key={idx} variant="outline" className="text-xs">
                           {content}
