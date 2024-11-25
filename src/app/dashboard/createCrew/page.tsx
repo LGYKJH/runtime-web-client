@@ -170,6 +170,7 @@ export default function CreateCrewPage() {
         crewSize,
         crewGoal,
         place,
+        days,
         crewProfile: uploadedImageUrl,
         leaderId: user.userId,
       };

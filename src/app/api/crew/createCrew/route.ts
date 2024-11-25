@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { cookies } from "next/headers";
+import { daysInWeek } from "date-fns";
 
 export async function POST(request: NextRequest) {
   const BASE_URL = `${process.env.BASE_URL}/crews/create`;
@@ -10,6 +11,7 @@ export async function POST(request: NextRequest) {
       types,
       crewSize,
       crewGoal,
+      days,
       place,
       crewProfile,
       leaderId,
@@ -21,7 +23,7 @@ export async function POST(request: NextRequest) {
       crewType: types.join(", "),
       crewSize: crewSize,
       crewGoal: crewGoal,
-      crewCalendarTitle: "",
+      crewCalendarTitle: days.join(", "),
       crewPlace: place,
       crewProfileImage: crewProfile,
       leaderId: leaderId,

@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import React, { useRef } from "react";
+import { useFilterStore } from "@/app/_stores/filterStore";
 import NaverMap from "./NaverMap";
 
 // 지역 이름 타입
@@ -54,12 +55,25 @@ const RightBar = () => {
     "종로구",
   ];
 
+  // Zustand store 상태 가져오기
+  const {
+    selectedDays,
+    selectedSports,
+    selectedCrewSize,
+    selectedDistrict,
+    toggleDay,
+    toggleSport,
+    setCrewSize,
+    setDistrict,
+  } = useFilterStore();
+
   // MutableRefObject로 타입 지정
   const districtHandlerRef = useRef<((district: Districts) => void) | null>(
     null
   );
 
   const handleDistrictClick = (district: Districts) => {
+    setDistrict(district);
     if (districtHandlerRef.current) {
       districtHandlerRef.current(district);
     }
@@ -69,6 +83,8 @@ const RightBar = () => {
     <section className="min-w-[320px] max-w-[320px] flex flex-col justify-start items-center gap-y-4 px-4 py-4 border-l-[0.5px] border-l-sidebar-border">
       <div className="w-full px-1 pt-1.5 pb-2 gap-y-1 flex flex-col justify-start items-start">
         <h4 className="pb-2">필터</h4>
+
+        {/* 요일 선택 */}
         <Label className="font-normal py-1.5 text-secondary">요일</Label>
         <div className="pt-0 pb-4 flex flex-row justify-start items-center gap-x-2">
           {days.map((day) => (
@@ -76,12 +92,19 @@ const RightBar = () => {
               key={day}
               variant="ghost"
               size="icon"
-              className="p-1 w-7 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white rounded-full"
+              className={`p-1 w-7 h-7 font-normal rounded-full ${
+                selectedDays.includes(day)
+                  ? "bg-pointColor text-white"
+                  : "hover:bg-pointColor hover:text-white"
+              }`}
+              onClick={() => toggleDay(day)}
             >
               {day}
             </Button>
           ))}
         </div>
+
+        {/* 유형 선택 */}
         <Label className="font-normal py-1.5 text-secondary">유형</Label>
         <div className="pt-0 pb-4 flex flex-row flex-wrap justify-start items-center gap-x-2 gap-y-2">
           {sports.map((sport) => (
@@ -89,12 +112,19 @@ const RightBar = () => {
               key={sport}
               variant="ghost"
               size="sm"
-              className="px-2.5 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white leading-normal rounded-full"
+              className={`px-2.5 h-7 font-normal leading-normal rounded-full ${
+                selectedSports.includes(sport)
+                  ? "bg-pointColor text-white"
+                  : "hover:bg-pointColor hover:text-white"
+              }`}
+              onClick={() => toggleSport(sport)}
             >
               {sport}
             </Button>
           ))}
         </div>
+
+        {/* 인원수 선택 */}
         <Label className="font-normal py-1.5 text-secondary">인원수</Label>
         <div className="pt-0 pb-4 flex flex-row flex-wrap justify-start items-center gap-x-2 gap-y-2">
           {crewSizes.map((size) => (
@@ -102,13 +132,19 @@ const RightBar = () => {
               key={size}
               variant="ghost"
               size="sm"
-              className="px-2.5 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white leading-normal rounded-full"
+              className={`px-2.5 h-7 font-normal leading-normal rounded-full ${
+                selectedCrewSize === size
+                  ? "bg-pointColor text-white"
+                  : "hover:bg-pointColor hover:text-white"
+              }`}
+              onClick={() => setCrewSize(size)}
             >
               {size}
             </Button>
           ))}
         </div>
 
+        {/* 장소 선택 */}
         <Label className="font-normal py-1.5 text-secondary">장소</Label>
         <NaverMap
           id="filterMap"
@@ -122,7 +158,11 @@ const RightBar = () => {
               key={district}
               variant="ghost"
               size="sm"
-              className="px-2.5 h-7 font-normal hover:bg-pointColor focus:bg-pointColor hover:text-white focus:text-white leading-normal rounded-full"
+              className={`px-2.5 h-7 font-normal leading-normal rounded-full ${
+                selectedDistrict === district
+                  ? "bg-pointColor text-white"
+                  : "hover:bg-pointColor hover:text-white"
+              }`}
               onClick={() => handleDistrictClick(district)}
             >
               {district}
