@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/app/stores/userStore";
 
 import CrewMemberCard from "./CrewMemberCard";
+import Spinner from "@/app/_components/Spinner";
 
 interface CrewRightBarProps {
   crewId: number;
@@ -24,9 +25,11 @@ const CrewRightBar = ({
   const [crewMemberInfo, setCrewMemberInfo] = useState<CrewMember[]>([]);
   const [isAlreadyMember, setIsAlreadyMember] = useState<boolean>(false);
   const [myRole, setMyRole] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 추가
 
   useEffect(() => {
     const fetchCrewMemberInfo = async () => {
+      setIsLoading(true); // 로딩 시작
       try {
         const response = await fetch(`/api/crew/getCrewMember/${crewId}`, {
           method: "GET",
@@ -51,6 +54,8 @@ const CrewRightBar = ({
         toast.error(
           error instanceof Error ? error.message : "An error occurred"
         );
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
     };
 
@@ -85,6 +90,14 @@ const CrewRightBar = ({
       toast.error("요청 중 오류가 발생했습니다.");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-full h-full">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <section className="relative min-w-[320px] max-w-[320px] flex flex-col justify-start items-center gap-y-4 px-4 py-4 border-l-[0.5px] border-l-sidebar-border">

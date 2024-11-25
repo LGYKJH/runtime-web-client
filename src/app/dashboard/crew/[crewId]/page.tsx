@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useParams } from "next/navigation";
 
 import CrewSection from "../_sections/CrewSection";
 import CrewRightBar from "../_components/CrewRightBar";
+import Spinner from "@/app/_components/Spinner";
 
 export default function CrewPage() {
   const { crewId } = useParams();

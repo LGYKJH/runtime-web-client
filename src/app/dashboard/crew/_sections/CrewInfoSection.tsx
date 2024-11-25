@@ -6,6 +6,7 @@ import CrewInfoIntroduction from "../_components/CrewInfoIntroduction";
 import CrewInfoReviewList from "../_components/CrewInfoReviewList";
 import { Crew } from "@/app/types/crew";
 import { toast } from "sonner";
+import Spinner from "@/app/_components/Spinner";
 
 interface CrewInfoSectionProps {
   crewId: number;
@@ -17,9 +18,11 @@ const CrewInfoSection = ({
   currentMemberNumber,
 }: CrewInfoSectionProps) => {
   const [crewBasicInfo, setCrewBasicInfo] = useState<Crew>();
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 추가
 
   useEffect(() => {
     const fetchCrewBasicInfo = async () => {
+      setIsLoading(true); // 로딩 시작
       try {
         const response = await fetch(`/api/crew/getBasicInfo/${crewId}`);
         if (!response.ok) {
@@ -30,12 +33,21 @@ const CrewInfoSection = ({
         setCrewBasicInfo(data);
       } catch (error) {
         toast.error(error.message);
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
     };
 
     fetchCrewBasicInfo();
-    console.log(crewBasicInfo);
-  }, []);
+  }, [crewId]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-full h-full">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <section className="w-full flex flex-col justify-start items-start px-4 gap-y-12">

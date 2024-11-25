@@ -5,6 +5,7 @@ import CrewCalendar from "../../_components/CrewCalendar";
 import { CrewPlan } from "@/app/types/crewPlan";
 import { CrewCalendarEventForm } from "@/app/dashboard/_components/CrewCalendarEventForm";
 import { toast } from "sonner";
+import Spinner from "@/app/_components/Spinner";
 
 interface CrewPlanSectionProps {
   crewId: number;
@@ -14,9 +15,11 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
   const [crewPlans, setCrewPlans] = useState<CrewPlan[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedPlans, setSelectedPlans] = useState<CrewPlan[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 추가
 
   useEffect(() => {
     const fetchCrewCalendar = async () => {
+      setIsLoading(true); // 로딩 시작
       try {
         const response = await fetch(`/api/crew/plan/detail`, {
           method: "POST",
@@ -26,10 +29,16 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
           body: JSON.stringify({ crewId }),
         });
 
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
         const data: CrewPlan[] = await response.json();
         setCrewPlans(data);
       } catch (error) {
         toast.error(error.message);
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
     };
 
@@ -37,14 +46,13 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
   }, [crewId]);
 
   const handleDateSelect = (date: Date | null) => {
-    console.log("Selected Date:", date); // 추가
+    console.log("Selected Date:", date);
     setSelectedDate(date);
 
     if (date) {
-      // 선택한 날짜에 해당하는 일정 필터링 (단일 날짜만 고려)
       const filteredPlans = crewPlans.filter((plan) => {
-        const eventDate = new Date(plan.crewPlanStartDt); // 일정의 날짜
-        return eventDate.toDateString() === date.toDateString(); // 선택한 날짜와 비교
+        const eventDate = new Date(plan.crewPlanStartDt);
+        return eventDate.toDateString() === date.toDateString();
       });
 
       setSelectedPlans(filteredPlans);
@@ -52,6 +60,14 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
       setSelectedPlans([]);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-full h-full">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col items-center gap-y-5 px-10">
