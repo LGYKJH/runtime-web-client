@@ -14,6 +14,7 @@ interface CrewCardProps {
   crewGoal: string;
   crewSize: number;
   crewProfileImage: string;
+  crewCalendarTitle: string;
   userRole: number;
 }
 
@@ -24,6 +25,7 @@ const CrewCard = ({
   crewGoal,
   crewSize,
   crewProfileImage,
+  crewCalendarTitle,
   userRole,
 }: CrewCardProps) => {
   const router = useRouter();
@@ -100,7 +102,7 @@ const CrewCard = ({
             &#35; 정원 &#58; {crewSize} 명
           </span>
           <span className="text-xs text-secondary font-normal">
-            &#35; 정기 러닝 &#58; 매주 월요일
+            &#35; 정기 러닝 &#58; {crewCalendarTitle}
           </span>
         </div>
       </div>

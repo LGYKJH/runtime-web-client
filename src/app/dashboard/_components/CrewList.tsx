@@ -133,6 +133,7 @@ const CrewList = () => {
                 crewGoal={crew.crewGoal}
                 crewSize={crew.crewSize}
                 crewProfileImage={crew.crewProfileImage}
+                crewCalendarTitle={crew.crewCalendarTitle}
                 userRole={userRole ?? 4}
               />
             );
@@ -156,6 +157,7 @@ const CrewList = () => {
                   crewGoal={crew.crewGoal}
                   crewSize={crew.crewSize}
                   crewProfileImage={crew.crewProfileImage}
+                  crewCalendarTitle={crew.crewCalendarTitle}
                   userRole={userRole ?? 4}
                 />
               );
