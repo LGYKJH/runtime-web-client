@@ -47,8 +47,8 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
         showOutsideDays={true} // 바깥 날짜 표시
         classNames={{
           months:
-            "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-          month: "space-y-4 w-full flex flex-col",
+            "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
+          month: "space-y-4 w-full",
           table: "w-full h-full border-collapse space-y-1",
           head: "",
           head_row: "",
