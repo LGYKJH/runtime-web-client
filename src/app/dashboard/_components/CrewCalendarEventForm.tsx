@@ -35,20 +35,13 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
   const formatToKoreanDateTime = (date: Date, time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
 
-    // 원본 날짜에 시간 설정
-    const koreanDate = new Date(date);
-    koreanDate.setHours(hours + 9); // 한국 시간으로 9시간 추가
-    koreanDate.setMinutes(minutes);
+    // 한국 시간대로 변환
+    const koreanDate = new Date(date.getTime());
+    koreanDate.setHours(hours, minutes, 0, 0); // 설정된 시간으로 업데이트
+    koreanDate.setTime(koreanDate.getTime() + 9 * 60 * 60 * 1000); // UTC+9 적용
 
-    // "yyyy-MM-dd'T'HH:mm:ss" 형식으로 변환
-    const yyyy = koreanDate.getFullYear();
-    const mm = String(koreanDate.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
-    const dd = String(koreanDate.getDate()).padStart(2, "0");
-    const hh = String(koreanDate.getHours()).padStart(2, "0");
-    const mi = String(koreanDate.getMinutes()).padStart(2, "0");
-    const ss = String(koreanDate.getSeconds()).padStart(2, "0");
-
-    return `${yyyy}-${mm}-${dd}T${hh}:${mi}:${ss}`;
+    // "yyyy-MM-dd'T'HH:mm:ss" 형식으로 반환
+    return koreanDate.toISOString().split(".")[0]; // 밀리초 제거
   };
   ///////////
 
@@ -72,7 +65,7 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
           : null,
         crewPlanSelectedDate: selectedDate.toISOString().split("T")[0],
         crewPlanPlace: formData.place,
-        crewPlanIsRegular: formData.category === "Regular Meeting" ? 1 : 0,
+        crewPlanIsRegular: formData.category === "정기모임" ? 1 : 0,
       };
 
       const response = await fetch("/api/crew/plan/create", {
@@ -83,7 +76,8 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
 
       if (response.ok) {
         alert("이벤트가 성공적으로 추가되었습니다!");
-        onSubmit(); // 성공 시 추가 동작
+        const newPlan = await response.json(); // 새로 추가된 일정 데이터
+        onSubmit(newPlan); // 상태 업데이트 콜백 호출
       } else {
         const errorData = await response.json();
         alert(`에러: ${errorData.message}`);

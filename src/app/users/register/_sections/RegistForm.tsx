@@ -233,6 +233,7 @@ export default function RegisterForm() {
         toast.error(
           `${errorData.error} 하이` || "알 수 없는 오류가 발생했습니다."
         );
+        router.push("/users/login");
         return;
       }
 
