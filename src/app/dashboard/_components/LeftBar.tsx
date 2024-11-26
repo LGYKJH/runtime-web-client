@@ -82,7 +82,7 @@ const LeftBar = () => {
           </Label>
           <div className="h-4"></div>
           <Calendar
-            className="text-xs rounded-md border"
+            className="flex items-center justify-center border rounded-md p-4"
             selected={selected} // 선택된 날짜 상태
             onSelect={setSelected} // 날짜 선택 시 상태 업데이트
             classNames={{
