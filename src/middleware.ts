@@ -14,12 +14,6 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  if (!refreshToken) {
-    return NextResponse.redirect(
-      `https://runtime-web-client.vercel.app/users/login`
-    );
-  }
-
   // Validate Token 한 번만 호출
   const validationResponse = await validateAndRefreshToken(
     accessToken,
