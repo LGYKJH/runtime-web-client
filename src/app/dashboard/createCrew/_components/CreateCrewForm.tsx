@@ -19,6 +19,7 @@ import {
 import Map from "./Map";
 import ImageUploader from "@/app/_components/ImageUploader";
 import { Districts, districts, districtCoordinates } from "@/lib/districts";
+import { toast } from "sonner";
 
 interface CreateCrewFormProps {
   crewName: string;
@@ -74,7 +75,7 @@ const CreateCrewForm = ({
     try {
       await handleCreateAIDesc(); // AI 자동 완성 호출
     } catch (error) {
-      console.error("AI 자동 완성 실패:", error);
+      toast.error("AI 자동 완성 실패: ", error);
     } finally {
       setIsLoadingAI(false); // 로딩 상태 비활성화
     }

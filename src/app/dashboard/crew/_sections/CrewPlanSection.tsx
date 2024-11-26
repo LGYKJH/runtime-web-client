@@ -43,11 +43,9 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
     };
 
     fetchCrewCalendar();
-    console.log(selectedPlans);
   }, [crewId, selectedDate]);
 
   const handleDateSelect = (date: Date | null) => {
-    console.log("Selected Date:", date);
     setSelectedDate(date);
 
     if (date) {

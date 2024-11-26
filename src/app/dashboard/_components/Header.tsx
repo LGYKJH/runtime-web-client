@@ -29,17 +29,14 @@ const Header = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("로그아웃 실패:", errorData.error || "알 수 없는 오류");
-        alert("로그아웃에 실패했습니다.");
+        toast.warning("로그아웃에 실패했습니다.", errorData.message);
         return;
       }
 
       const responseData = await response.json();
-      console.log("로그아웃 성공:", responseData.message);
       toast.success(responseData.message);
       router.push("/users/login");
     } catch (error) {
-      console.log("로그아웃 중 오류 발생:", error);
       alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };

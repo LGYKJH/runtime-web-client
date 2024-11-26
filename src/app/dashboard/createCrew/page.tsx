@@ -98,17 +98,14 @@ export default function CreateCrewPage() {
       responses.forEach(async (response, index) => {
         if (response.ok) {
           const data = await response.json();
-          console.log(`생성 성공 (index ${index}):`, data);
         } else {
           const error = await response.json();
-          console.error(`생성 실패 (index ${index}):`, error.message);
           toast.error(`생성 실패: ${error.message}`);
         }
       });
 
       toast.success("모든 정기 크루 일정이 성공적으로 업로드되었습니다.");
     } catch (error) {
-      console.error("오류 발생:", error);
       toast.error("정기 일정 업로드 중 오류가 발생했습니다.");
     }
   };
@@ -175,8 +172,6 @@ export default function CreateCrewPage() {
         leaderId: user.userId,
       };
 
-      console.log("전송 데이터:", requestBody);
-
       // 크루 생성 API 요청
       const response = await fetch("/api/crew/createCrew", {
         method: "POST",
@@ -188,7 +183,6 @@ export default function CreateCrewPage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("생성 성공:", data);
 
         const uploadCrewPlan = await uploadCrewRegularPlan(
           data,
@@ -197,18 +191,15 @@ export default function CreateCrewPage() {
           endTime,
           place
         );
-        console.log(uploadCrewPlan);
         toast.success("크루가 성공적으로 생성되었습니다!");
         setTimeout(() => {
           router.push("/dashboard");
         }, 1000);
       } else {
         const error = await response.json();
-        console.error("생성 실패:", error);
         toast.error(`생성 실패: ${error.message}`);
       }
     } catch (error) {
-      console.error("요청 오류:", error);
       toast.error("요청 중 오류가 발생했습니다.");
     }
   };
@@ -238,7 +229,6 @@ export default function CreateCrewPage() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("생성 성공:", data);
         toast.success("성공적으로 AI 크루 소개가 생성되었습니다.");
         setCrewGoal(data.post);
       } else {

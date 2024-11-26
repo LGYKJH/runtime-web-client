@@ -35,12 +35,15 @@ const UserAuthForm = () => {
     if (id === "email") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        emailError: value.includes("@") ? "" : "유효한 이메일 주소를 입력하세요.",
+        emailError: value.includes("@")
+          ? ""
+          : "유효한 이메일 주소를 입력하세요.",
       }));
     } else if (id === "password") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        passwordError: value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
+        passwordError:
+          value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
       }));
     }
   };
@@ -50,7 +53,7 @@ const UserAuthForm = () => {
     setIsLoading(true);
 
     if (!formData.email || !formData.password) {
-      console.log("이메일과 비밀번호를 모두 입력해주세요.");
+      toast.error("이메일과 비밀번호를 모두 입력해주세요!");
       setIsLoading(false);
       return;
     }
@@ -76,7 +79,7 @@ const UserAuthForm = () => {
         }, 500);
       }
     } catch (error) {
-      console.log("서버와의 통신 중 오류가 발생했습니다.");
+      toast.error("서버와의 통신 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
@@ -125,7 +128,10 @@ const UserAuthForm = () => {
           로그인
         </Button>
 
-        <a href="/users/register" className="text-sm text-blue-500 hover:underline mt-2">
+        <a
+          href="/users/register"
+          className="text-sm text-blue-500 hover:underline mt-2"
+        >
           회원가입
         </a>
       </form>

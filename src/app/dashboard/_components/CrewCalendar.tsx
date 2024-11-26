@@ -19,7 +19,6 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
   // 날짜 클릭 핸들러
   const handleDayClick = (date: Date | undefined) => {
     const selected = date || null;
-    console.log("Day Clicked:", selected); // 추가
     setSelectedDate(selected);
     onSelectDate(selected);
   };
@@ -27,20 +26,6 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
   const getDayPlans = (date: Date): string[] => {
     // 입력된 날짜를 ISO 형식으로 변환 후 'YYYY-MM-DD' 형식만 추출
     const selectedDate = date.toISOString().split("T")[0];
-
-    console.log("Selected Date:", selectedDate);
-    console.log("Crew Plan Dates:");
-    crewPlans.forEach((plan) => {
-      const databaseDate = new Date(plan.crewPlanSelectedDate)
-        .toISOString()
-        .split("T")[0];
-      console.log({
-        crewPlanSelectedDate: plan.crewPlanSelectedDate,
-        databaseDate,
-        selectedDate,
-        matches: databaseDate === selectedDate,
-      });
-    });
 
     // DB에서 가져온 날짜와 비교
     return crewPlans

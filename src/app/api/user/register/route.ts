@@ -19,8 +19,17 @@ export async function POST(request: NextRequest) {
     const userPreference = formData.get("userPreference") as string | null; // 이미 문자열로 받아짐
     const profileImage = formData.get("profileImage") as File | null;
 
-    if (!userEmail || !userPassword || !userName || !userNickname || !userGender) {
-      return NextResponse.json({ error: "필수 필드가 누락되었습니다." }, { status: 400 });
+    if (
+      !userEmail ||
+      !userPassword ||
+      !userName ||
+      !userNickname ||
+      !userGender
+    ) {
+      return NextResponse.json(
+        { error: "필수 필드가 누락되었습니다." },
+        { status: 400 }
+      );
     }
 
     // 프로필 이미지 업로드 처리
@@ -56,8 +65,6 @@ export async function POST(request: NextRequest) {
       userEmailIsAuthenticated: 1,
     };
 
-    console.log("최종 전송 데이터:", body);
-
     // 백엔드 API 호출
     const response = await fetch(`${process.env.BASE_URL}/users/register`, {
       method: "POST",
@@ -69,7 +76,10 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      return NextResponse.json({ error: errorData.message || "회원가입 실패" }, { status: 400 });
+      return NextResponse.json(
+        { error: errorData.message || "회원가입 실패" },
+        { status: 400 }
+      );
     }
 
     return NextResponse.json(
@@ -77,7 +87,10 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.";
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "알 수 없는 오류가 발생했습니다.";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -11,6 +11,7 @@ import React from "react";
 import { useUserStore } from "@/app/stores/userStore";
 import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
 
 const LeftBar = () => {
   const user = useUserStore((state) => state.user);
@@ -24,24 +25,23 @@ const LeftBar = () => {
       try {
         const response = await fetch("/api/user/getUserInfo", {
           method: "GET",
-          credentials: "include", // 쿠키 포함
+          credentials: "include",
         });
 
         if (!response.ok) {
-          console.error(
+          toast.warning(
             `사용자 정보를 가져오는 데 실패했습니다. 상태 코드: ${response.status}, 메시지: ${response.statusText}`
           );
           return;
         }
 
         const userData = await response.json();
-        setUser(userData); // Zustand 상태 업데이트
+        setUser(userData);
       } catch (error) {
-        console.error("사용자 정보 로드 중 오류 발생:", error);
+        toast.warning("사용자 정보 로드 중 오류 발생: ", error);
       }
     };
 
-    // 사용자 정보 로드
     fetchUserData();
   }, [setUser]);
 

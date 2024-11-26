@@ -43,7 +43,6 @@ export async function POST(request: Request) {
     const data = await response.json();
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
-    console.error("API 호출 에러:", error);
     return NextResponse.json(
       { message: "서버 요청 중 오류가 발생했습니다." },
       { status: 500 }

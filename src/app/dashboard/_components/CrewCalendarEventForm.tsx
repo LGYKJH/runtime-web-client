@@ -75,11 +75,6 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
         crewPlanIsRegular: formData.category === "Regular Meeting" ? 1 : 0,
       };
 
-      console.log(
-        "프론트엔드 crewPlanselectedDate :" +
-          selectedDate.toISOString().split("T")[0]
-      );
-
       const response = await fetch("/api/crew/plan/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,7 +89,6 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
         alert(`에러: ${errorData.message}`);
       }
     } catch (error) {
-      console.error("에러 발생:", error);
       alert("이벤트 추가 중 문제가 발생했습니다.");
     }
   };

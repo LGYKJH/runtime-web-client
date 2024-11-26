@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface CreateRightBarProps {
   days: string[];
@@ -85,7 +86,7 @@ const CreateRightBar: React.FC<CreateRightBarProps> = ({
     try {
       await handleCreateCrew(); // 비동기 함수 호출
     } catch (error) {
-      console.error("Error during crew creation:", error);
+      toast.error("크루 생성 시, 오류가 발생했습니다: ", error);
     } finally {
       setIsSubmitting(false); // 로딩 상태 해제
     }

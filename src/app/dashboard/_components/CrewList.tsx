@@ -18,7 +18,7 @@ const CrewList = () => {
 
   const [crewList, setCrewList] = useState<Crew[]>([]);
   const [myCrew, setMyCrew] = useState<{ crewId: number; role: number }[]>([]);
-  const [menuType, setMenuType] = useState<string>("참여중인 크루");
+  const [menuType, setMenuType] = useState<string>("전체 크루");
   const [filteredCrewList, setFilteredCrewList] = useState<Crew[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true); // 로딩 상태 추가
   const [isPending, startTransition] = useTransition();
@@ -45,7 +45,7 @@ const CrewList = () => {
     fetchCrewList();
   }, []);
 
-  // Fetch 참여중인 크루 정보
+  // Fetch 전체 크루 정보
   useEffect(() => {
     const fetchMyCrew = async () => {
       setIsLoading(true); // 로딩 상태 시작
@@ -117,7 +117,7 @@ const CrewList = () => {
     <div className="w-full flex flex-col justify-start items-center gap-y-7 pl-10 pr-7 py-7 flex-1 h-full">
       <CrewListMenu menuType={menuType} setMenuType={setMenuType} />
       {isPending && <Spinner />}
-      {menuType === "참여중인 크루" ? (
+      {menuType === "전체 크루" ? (
         <div className="w-full overflow-y-scroll scrollbar-none flex flex-col justify-start items-center gap-y-7">
           {filteredCrewList.map((crew) => {
             const userRole = myCrew.find(

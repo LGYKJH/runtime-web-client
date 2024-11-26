@@ -40,7 +40,6 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred.";
-    console.error("Fetch failed:", errorMessage);
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

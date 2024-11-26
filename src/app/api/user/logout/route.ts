@@ -9,9 +9,6 @@ export async function GET(request: Request) {
     const accessToken = cookieStore.get("access_token")?.value;
     const refreshToken = cookieStore.get("refresh_token")?.value;
 
-    console.log("Access Token:", accessToken);
-    console.log("Refresh Token:", refreshToken);
-
     if (!accessToken || !refreshToken) {
       return NextResponse.json(
         { error: "토큰이 존재하지 않습니다." },
@@ -36,9 +33,8 @@ export async function GET(request: Request) {
     }
 
     const responseData = await response.json();
-    console.log("응답 데이터:", responseData);
 
-    return NextResponse.json(responseData );
+    return NextResponse.json(responseData);
   } catch (error) {
     const errorMessage =
       error instanceof Error

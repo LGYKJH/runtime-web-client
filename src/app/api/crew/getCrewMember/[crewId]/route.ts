@@ -16,7 +16,6 @@ export async function GET(
 
   try {
     const cookieStore = await cookies();
-    console.log("Received Cookies:", cookieStore.getAll());
     const accessToken = cookieStore.get("access_token")?.value;
 
     const userId = cookieStore.get("user_id")?.value;
@@ -89,9 +88,6 @@ export async function GET(
       }
     }
 
-    console.log("Is user in crew:", isUserInCrew);
-    console.log("User role:", userRole);
-
     let combinedData: CrewMember[] = [];
 
     // 3. 역할에 따른 데이터 반환
@@ -121,7 +117,6 @@ export async function GET(
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred.";
-    console.error("Fetch failed:", errorMessage);
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

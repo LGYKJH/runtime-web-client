@@ -26,9 +26,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // body 내용을 console.log로 출력
-    console.log("Request body:", body);
-
     // Validate incoming data
     if (
       !body.crewPlanContent || // 카테고리
@@ -42,8 +39,6 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log("중간서버 crewPlanselectedDate :" + body.crewPlanSelectedDate);
-
     // Transform the data to match the Spring backend DTO
     const crewPlanData = {
       crewId: isNaN(body.crewId) ? parseFloat(body.crewId) : body.crewId,
@@ -56,8 +51,6 @@ export async function POST(request: Request) {
       crewPlanIsRegular: body.crewPlanIsRegular,
       crewPlanCreatedDt: formatDateToLocalDateTime(new Date()),
     };
-
-    console.log("Transformed crewPlanData:", crewPlanData);
 
     // Send data to the Spring backend
     const response = await fetch(BASE_URL, {
@@ -94,7 +87,6 @@ export async function POST(request: Request) {
       }
     }
   } catch (error) {
-    console.error("서버 에러:", error);
     return NextResponse.json(
       { message: "서버 에러가 발생했습니다. 다시 시도해주세요." },
       { status: 500 }
