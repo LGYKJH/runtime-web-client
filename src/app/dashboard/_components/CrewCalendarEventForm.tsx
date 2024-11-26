@@ -76,7 +76,8 @@ function CrewCalendarEventForm({ selectedDate, crewId, onSubmit, onCancel }) {
 
       if (response.ok) {
         alert("이벤트가 성공적으로 추가되었습니다!");
-        onSubmit(); // 성공 시 추가 동작
+        const newPlan = await response.json(); // 새로 추가된 일정 데이터
+        onSubmit(newPlan); // 상태 업데이트 콜백 호출
       } else {
         const errorData = await response.json();
         alert(`에러: ${errorData.message}`);

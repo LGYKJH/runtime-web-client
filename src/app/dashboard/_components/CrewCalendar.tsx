@@ -30,9 +30,7 @@ function CrewCalendar({ onSelectDate, crewPlans }: CrewCalendarProps) {
     // DB에서 가져온 날짜와 비교
     return crewPlans
       .filter((plan) => {
-        const databaseDate = new Date(plan.crewPlanSelectedDate)
-          .toISOString()
-          .split("T")[0];
+        const databaseDate = plan.crewPlanSelectedDate.split("T")[0];
         return databaseDate === selectedDate; // 비교 시 ISO 형식 통일
       })
       .map((plan) => plan.crewPlanContent);

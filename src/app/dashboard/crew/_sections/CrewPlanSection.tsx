@@ -49,9 +49,11 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
     setSelectedDate(date);
 
     if (date) {
+      const selectedDateString = date.toISOString().split("T")[0];
+
       const filteredPlans = crewPlans.filter((plan) => {
-        const eventDate = new Date(plan.crewPlanStartDt);
-        return eventDate.toDateString() === date.toDateString();
+        const planDateString = plan.crewPlanSelectedDate.split("T")[0];
+        return planDateString === selectedDateString;
       });
 
       setSelectedPlans(filteredPlans);
@@ -67,6 +69,21 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
       </div>
     );
   }
+
+  // 세부 일정 카드, 시간 포맷팅 함수
+  const formatDateTime = (dateTimeString: string) => {
+    const date = new Date(dateTimeString);
+    return date
+      .toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false, // 24시간 형식
+      })
+      .replace(",", ""); // 필요하면 쉼표 제거
+  };
 
   return (
     <div className="w-full flex flex-row justify-start items-start gap-y-5 px-10">
@@ -96,8 +113,8 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
                         장소: {plan.crewPlanPlace || "위치 없음"}
                       </p>
                       <p className="text-sm text-gray-600">
-                        시간: {plan.crewPlanStartDt} ~{" "}
-                        {plan.crewPlanEndDt || "없음"}
+                        시간: {formatDateTime(plan.crewPlanStartDt)} ~{" "}
+                        {formatDateTime(plan.crewPlanEndDt) || "없음"}
                       </p>
                     </li>
                   ))}
@@ -112,7 +129,13 @@ const CrewPlanSection = ({ crewId }: CrewPlanSectionProps) => {
               <CrewCalendarEventForm
                 crewId={crewId}
                 selectedDate={selectedDate}
-                onSubmit={() => {
+                onSubmit={(newPlan) => {
+                  // 서버에서 받은 데이터 형식을 상태에 추가
+                  // crewPlanSelectedDate가 없는 경우 selectedDate를 사용하여 기본값 추가
+                  newPlan.crewPlanSelectedDate = selectedDate
+                    ?.toISOString()
+                    .split("T")[0];
+                  setCrewPlans((prevPlans) => [...prevPlans, newPlan]);
                   setSelectedDate(null);
                   toast.success("일정이 추가되었습니다!");
                 }}
