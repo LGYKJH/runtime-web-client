@@ -9,11 +9,15 @@ export async function middleware(request: NextRequest) {
 
   // Access Token 또는 Refresh Token이 없으면 로그인 페이지로 리다이렉트
   if (!accessToken && !refreshToken) {
-    return NextResponse.redirect(`http://localhost:3000/users/login`);
+    return NextResponse.redirect(
+      `https://runtime-web-client.vercel.app/users/login`
+    );
   }
 
   if (!refreshToken) {
-    return NextResponse.redirect(`http://localhost:3000/users/login`);
+    return NextResponse.redirect(
+      `https://runtime-web-client.vercel.app/users/login`
+    );
   }
 
   // Validate Token 한 번만 호출
@@ -24,7 +28,9 @@ export async function middleware(request: NextRequest) {
 
   if (!validationResponse.isValid) {
     // 토큰이 유효하지 않으면 로그인 페이지로 리다이렉트
-    return NextResponse.redirect(`http://localhost:3000/users/login`);
+    return NextResponse.redirect(
+      `https://runtime-web-client.vercel.app/users/login`
+    );
   }
 
   // 요청을 그대로 전달

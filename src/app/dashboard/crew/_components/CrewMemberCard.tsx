@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { toast } from "sonner";
 
@@ -10,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Ellipsis } from "lucide-react";
 
+import { useRouter } from "next/navigation";
 import MemberOptionDialog from "./MemberOptionDialog";
 
 interface CrewMemberCardProps {
@@ -27,6 +30,8 @@ const CrewMemberCard = ({
   crewMemberRole,
   myRole,
 }: CrewMemberCardProps) => {
+  const router = useRouter();
+
   const handleMemberAcceptButton = async () => {
     try {
       const requestBody = {
@@ -43,6 +48,7 @@ const CrewMemberCard = ({
 
       if (response.ok) {
         toast.success("멤버 수락이 완료되었습니다!");
+        router.refresh();
       } else {
         const error = await response.json();
         toast.error(error.message);

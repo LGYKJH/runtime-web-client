@@ -19,7 +19,14 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ProfileImageUploader from "../_components/ProfileImageUploader";
 
-const sports = ["로드 런", "트레일 런", "하프 마라톤", "마라톤", "리커버리 런", "조깅"];
+const sports = [
+  "로드 런",
+  "트레일 런",
+  "하프 마라톤",
+  "마라톤",
+  "리커버리 런",
+  "조깅",
+];
 
 const STEPS = [
   ["userEmail", "userPassword", "userName"],
@@ -71,12 +78,26 @@ export default function RegisterForm() {
     if (id === "userEmail") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        userEmail: value.includes("@") ? "" : "유효한 이메일 주소를 입력하세요.",
+        userEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+          ? ""
+          : "유효한 이메일 주소를 입력하세요.",
       }));
     } else if (id === "userPassword") {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        userPassword: value.length >= 8 ? "" : "비밀번호는 최소 8자리 이상이어야 합니다.",
+        userPassword:
+          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+            value
+          )
+            ? ""
+            : "비밀번호는 8자리 이상, 숫자, 영문, 특수문자를 포함해야 합니다.",
+      }));
+    } else if (id === "userName") {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        userName: /^[가-힣]+$/.test(value)
+          ? ""
+          : "이름은 한글만 입력 가능합니다.",
       }));
     } else if (id === "userBirth") {
       setErrors((prevErrors) => ({
@@ -155,7 +176,10 @@ export default function RegisterForm() {
     currentStepFields.forEach((key) => {
       if (key === "userGender" && formData.userGender === null) {
         newErrors[key] = `${LABELS[key]}을(를) 선택하세요.`;
-      } else if (key === "userPreference" && formData.userPreference.length === 0) {
+      } else if (
+        key === "userPreference" &&
+        formData.userPreference.length === 0
+      ) {
         newErrors[key] = `${LABELS[key]}을(를) 선택하세요.`;
       } else if (!formData[key as keyof RegisterFormType]) {
         newErrors[key] = `${LABELS[key]}을(를) 입력하세요.`;
@@ -206,7 +230,9 @@ export default function RegisterForm() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(`${errorData.error} 하이` || "알 수 없는 오류가 발생했습니다.");
+        toast.error(
+          `${errorData.error} 하이` || "알 수 없는 오류가 발생했습니다."
+        );
         return;
       }
 
@@ -236,15 +262,20 @@ export default function RegisterForm() {
                 if (key === "userPassword") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                      <label className="text-sm font-medium">
+                        {LABELS[key]}
+                      </label>
                       <input
                         type="password" // password 타입으로 수정
                         id={key}
                         value={formData[key] || ""}
                         onChange={handleChange}
-                        className="border rounded-md p-2"
+                        className="border rounded-md p-2 focus:border-none focus:outline-none focus:ring-0"
+                        placeholder="비밀번호"
                       />
-                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                      {errors[key] && (
+                        <p className="text-red-500 text-sm">{errors[key]}</p>
+                      )}
                     </div>
                   );
                 }
@@ -252,7 +283,9 @@ export default function RegisterForm() {
                 if (key === "userBirth") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                      <label className="text-sm font-medium">
+                        {LABELS[key]}
+                      </label>
                       <input
                         type="date"
                         id={key}
@@ -260,20 +293,29 @@ export default function RegisterForm() {
                         onChange={handleChange}
                         className="border rounded-md p-2"
                       />
-                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                      {errors[key] && (
+                        <p className="text-red-500 text-sm">{errors[key]}</p>
+                      )}
                     </div>
                   );
                 }
 
                 if (key === "profileImage") {
                   return (
-                    <div key={key} className="w-full flex flex-col justify-items-start gap-y-2">
-                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                    <div
+                      key={key}
+                      className="w-full flex flex-col justify-items-start gap-y-2"
+                    >
+                      <label className="text-sm font-medium">
+                        {LABELS[key]}
+                      </label>
                       <ProfileImageUploader
                         file={formData.profileImage}
                         setFile={handleImageChange}
                       />
-                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                      {errors[key] && (
+                        <p className="text-red-500 text-sm">{errors[key]}</p>
+                      )}
                     </div>
                   );
                 }
@@ -281,7 +323,9 @@ export default function RegisterForm() {
                 if (key === "userGender") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                      <label className="text-sm font-medium">
+                        {LABELS[key]}
+                      </label>
                       <div className="flex items-center gap-4">
                         <label className="flex items-center gap-1">
                           <input
@@ -305,7 +349,9 @@ export default function RegisterForm() {
                         </label>
                       </div>
                       {errors.userGender && (
-                        <p className="text-red-500 text-sm">{errors.userGender}</p>
+                        <p className="text-red-500 text-sm">
+                          {errors.userGender}
+                        </p>
                       )}
                     </div>
                   );
@@ -314,9 +360,13 @@ export default function RegisterForm() {
                 if (key === "userAddress") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                      <label className="text-sm font-medium">
+                        {LABELS[key]}
+                      </label>
                       <Address onAddressChange={handleAddressChange} />
-                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                      {errors[key] && (
+                        <p className="text-red-500 text-sm">{errors[key]}</p>
+                      )}
                     </div>
                   );
                 }
@@ -324,10 +374,15 @@ export default function RegisterForm() {
                 if (key === "userPreference") {
                   return (
                     <div key={key} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium">{LABELS[key]}</label>
+                      <label className="text-sm font-medium">
+                        {LABELS[key]}
+                      </label>
                       <div className="flex flex-col gap-1">
                         {sports.map((sport) => (
-                          <label key={sport} className="flex items-center gap-2">
+                          <label
+                            key={sport}
+                            className="flex items-center gap-2"
+                          >
                             <input
                               type="checkbox"
                               value={sport}
@@ -338,7 +393,9 @@ export default function RegisterForm() {
                           </label>
                         ))}
                       </div>
-                      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                      {errors[key] && (
+                        <p className="text-red-500 text-sm">{errors[key]}</p>
+                      )}
                     </div>
                   );
                 }
@@ -347,8 +404,8 @@ export default function RegisterForm() {
                   <InputField
                     key={key}
                     id={key}
-                    label={LABELS[key]}
-                    placeholder={key}
+                    label={LABELS[key]} // LABELS에서 label 가져오기
+                    placeholder={LABELS[key]} // placeholder도 LABELS에서 가져오기
                     value={formData[key as keyof RegisterFormType] as string}
                     error={errors[key]}
                     onChange={handleChange}
