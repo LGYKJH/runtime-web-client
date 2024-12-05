@@ -90,6 +90,22 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 <br>
 
 ### 4️⃣ 크루 생성
+![크루생성(1)](https://github.com/user-attachments/assets/d453ff40-5985-4fad-a9f6-c436d68e4c50)
+![크루생성(2)](https://github.com/user-attachments/assets/7afd4aa2-a979-4497-b867-a0140232efd7)
+
+<br>
+
+### 5️⃣ 크루 일정 생성
+![크루일정생성](https://github.com/user-attachments/assets/fb2ae68f-e079-40df-a407-8f09ff59ef4a)
+
+<br>
+
+### 6️⃣ 기타 기능 - 다크모드
+![다크모드](https://github.com/user-attachments/assets/39a66d7e-d818-4571-b11e-c66c1165a99a)
+
+
+
+
 
 ```
 
