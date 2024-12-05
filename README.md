@@ -74,11 +74,22 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 
 ## 서비스 화면 
-### 1️⃣ 회원가입 로직
+### 1️⃣ 회원가입 
 ![회원가입](https://github.com/user-attachments/assets/aa3a9efe-e6da-4a57-8147-b2d810bcfe19)
 
 <br>
-### 1️⃣ 회원가입 로직
+
+### 2️⃣ 크루 신청 
+![크루신청](https://github.com/user-attachments/assets/46311ba5-cb16-4e7a-93ce-f504e2a1fb52)
+
+<br>
+
+### 3️⃣ 크루원 승인
+![크루원승인](https://github.com/user-attachments/assets/b9431613-2b7a-4cc7-a5cc-fd9f962b501e)
+
+<br>
+
+### 4️⃣ 크루 생성
 
 ```
 
